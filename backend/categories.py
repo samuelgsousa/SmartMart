@@ -65,3 +65,24 @@ async def atualizar_categoria(
     db.close()
     
     return db_categoria
+
+@router.delete("/{category_id}")
+async def excluir_categoria(category_id: int):
+    db = SessionLocal()
+
+    # Busca a categoria no banco de dados
+
+    db_categoria = db.query(CategoryDB).filter(CategoryDB.id == category_id).first()
+
+    if not category_id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Categoria com ID {category_id} não encontrada"
+        )
+    
+        # Remove o produto
+    db.delete(db_categoria)
+    db.commit()
+    db.close()
+    
+    return {"mensagem": f"Cateoria com ID {category_id} excluída com sucesso"}
