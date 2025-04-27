@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import List
 from database import SessionLocal, Base, engine
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String
 
 # --- Modelo SQLAlchemy ---
 class CategoryDB(Base):
