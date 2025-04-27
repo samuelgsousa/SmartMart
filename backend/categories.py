@@ -44,3 +44,24 @@ def criar_categoria(categoria: CategoryCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(nova_categoria)
     return nova_categoria
+
+@router.put("/{category_id}", response_model=CategoryResponse)
+async def atualizar_categoria(
+    category_id: int,
+    categoria: CategoryCreate
+):
+    db = SessionLocal()
+    
+    # Busca a categoria no banco
+    db_categoria = db.query(CategoryDB).filter(CategoryDB.id == category_id).first()
+
+    if not db_categoria:
+        raise HTTPException(status_code=404, detail="Categoria não encontrada")
+    
+    db_categoria.name = categoria.name #Atualiza o nome
+
+    db.commit()
+    db.refresh(db_categoria)
+    db.close()
+    
+    return db_categoria
