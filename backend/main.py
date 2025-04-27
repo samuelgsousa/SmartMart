@@ -49,11 +49,25 @@ class ProdutoResponse(BaseModel):
         from_attributes = True  
 
 
+@app.get("/produtos/", response_model=List[ProdutoResponse])
+async def listar_produtos(price_min: float = None):  
+    db = SessionLocal()
+    query = db.query(ProdutoDB)
+    
+    if price_min:
+        query = query.filter(ProdutoDB.price >= price_min) 
+    
+    produtos = query.all()
+    db.close()
+    
+    return produtos
+
+
 @app.post("/produtos/", response_model=ProdutoResponse)
-async def criar_produto(produto: ProdutoCreate):  # Altere para ProdutoCreate
+async def criar_produto(produto: ProdutoCreate): 
     db = SessionLocal()
     
-    # Converta o modelo Pydantic para SQLAlchemy
+    # Convertendo o modelo Pydantic para SQLAlchemy
     db_produto = ProdutoDB(
         name=produto.name,
         description=produto.description,
@@ -69,15 +83,29 @@ async def criar_produto(produto: ProdutoCreate):  # Altere para ProdutoCreate
     
     return db_produto
 
-@app.get("/produtos/", response_model=List[ProdutoResponse])
-async def listar_produtos(price_min: float = None):  # Altere o parâmetro para "price_min"
+@app.put("/produtos/{produto_id}", response_model=ProdutoResponse)
+async def atualizar_produto(
+    produto_id: int, 
+    produto: ProdutoCreate  # Reutiliza o modelo de criação (todos campos obrigatórios)
+):
     db = SessionLocal()
-    query = db.query(ProdutoDB)
     
-    if price_min:
-        query = query.filter(ProdutoDB.price >= price_min)  # Use "price", não "preco"
+    # Busca o produto no banco
+    db_produto = db.query(ProdutoDB).filter(ProdutoDB.id == produto_id).first()
     
-    produtos = query.all()
+    if not db_produto:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+    
+    # Atualiza todos os campos
+    db_produto.name = produto.name
+    db_produto.description = produto.description
+    db_produto.price = produto.price
+    db_produto.category_id = produto.category_id
+    db_produto.brand = produto.brand
+    
+    db.commit()
+    db.refresh(db_produto)
     db.close()
     
-    return produtos
+    return db_produto
+
