@@ -1,11 +1,11 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, status, Response, UploadFile, File, HTTPException
 from pydantic import BaseModel
 import csv
 from typing import List
-
 from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
 
 app = FastAPI()
 
@@ -109,3 +109,22 @@ async def atualizar_produto(
     
     return db_produto
 
+@app.delete("/produtos/{produto_id}")
+async def excluir_produto(produto_id: int):
+    db = SessionLocal()
+    
+    # Busca o produto no banco
+    db_produto = db.query(ProdutoDB).filter(ProdutoDB.id == produto_id).first()
+    
+    if not db_produto:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Produto com ID {produto_id} não encontrado"
+        )
+    
+    # Remove o produto
+    db.delete(db_produto)
+    db.commit()
+    db.close()
+    
+    return {"mensagem": f"Produto ID {produto_id} excluído com sucesso"}
