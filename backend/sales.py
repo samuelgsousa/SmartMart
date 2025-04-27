@@ -38,6 +38,11 @@ def get_db():
     finally:
         db.close()
 
+@router.get("/", response_model=List[SaleResponse])
+def listar_vendas(db: Session = Depends(get_db)):
+    query = db.query(SaleDB)
+    return query.all()
+
 @router.post("/", response_model=SaleResponse)
 def criar_venda(venda: SaleCreate, db: Session = Depends(get_db)):
     nova_venda = SaleDB(**venda.model_dump())
