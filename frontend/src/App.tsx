@@ -1,4 +1,5 @@
 import React from"react";
+import { useState, useEffect, useMemo  } from "react";
 import {
     Table,
     TableBody,
@@ -9,11 +10,41 @@ import {
     TableRow,
   } from "@/components/ui/table";
 
-import SalesService from "./services/sales.service"
+import SalesService from "./services/sales.service" 
+
+// Função para “humanizar” a chave, ex: "total_price" -> "Total Price"
+
+const humanize = (key: string) =>
+    key
+      .split("_")
+      .map(w => w[0].toUpperCase() + w.slice(1))
+      .join(" ");
+
+// Formata valores conforme a coluna, ex: data ou preço
+const formatCellValue = (value: any, key: string) => {
+    if (key === "date" && typeof value === "string") {
+      return new Date(value).toLocaleDateString();
+    }
+    if (key === "total_price" && typeof value === "number") {
+      return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    }
+    return String(value);
+  };
+  
+
 
 function App() {
-    const teste = SalesService.getAll()
-    console.log(teste)
+
+    const [sales, setSales] = useState<any[]>([]);
+
+
+
+
+    useEffect(() => {
+        SalesService.getAll().then(data => {
+          setSales(data);
+        });
+      }, []);
 
     return (
         <>
@@ -23,20 +54,22 @@ function App() {
             <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader>
                 <TableRow>
-                <TableHead className="w-[100px]">Invoice</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Method</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                    <TableHead key={"product_name"}>Product Name</TableHead>
+                    <TableHead key={"total_price"}>Total Price</TableHead>
+                    <TableHead key={"quantity"}>Quantity</TableHead>
+                    <TableHead key={"date"}>Date</TableHead>
                 </TableRow>
             </TableHeader>
 
             <TableBody>
-                <TableRow>
-                <TableCell className="font-medium">INV001</TableCell>
-                <TableCell>Paid</TableCell>
-                <TableCell>Credit Card</TableCell>
-                <TableCell className="text-right">$250.00</TableCell>
+            {sales.map(sale => (
+                <TableRow key={sale.id}>
+                    <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
+                    <TableCell key={"total_price_cell"}>{sale.total_price}</TableCell>
+                    <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
+                    <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
                 </TableRow>
+            ))}
             </TableBody>
         </Table>
 
