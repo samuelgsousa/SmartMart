@@ -51,3 +51,25 @@ def criar_venda(venda: SaleCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(nova_venda)
     return nova_venda
+
+@router.put("/{venda_id}", response_model=SaleResponse)
+async def atualizar_venda(venda_id: int, venda: SaleCreate):
+    db = SessionLocal()
+    
+    # Busca a venda no banco
+    db_sale = db.query(SaleDB).filter(SaleDB.id == venda_id).first()
+
+    if not db_sale:
+        raise HTTPException(status_code=404, detail="Venda não encontrada")
+    
+    db_sale.product_id = venda.product_id
+    db_sale.quantity = venda.quantity
+    db_sale.total_price = venda.total_price
+    db_sale.date = venda.date
+    
+
+    db.commit()
+    db.refresh(db_sale)
+    db.close()
+    
+    return db_sale
