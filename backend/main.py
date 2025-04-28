@@ -8,8 +8,27 @@ from sqlalchemy.orm import sessionmaker
 from produtos import router as produtos_router
 from categories import router as categories_router
 from sales import router as sales_router
+from fastapi.middleware.cors import CORSMiddleware
+
+
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:5173",
+    # Depois adicionar outros domínios/deploys aqui:
+    # Ex: "https://meu-app.vercel.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,        
+    allow_credentials=True,        
+    allow_methods=["*"],    
+    allow_headers=["*"],
+)
+
+
 app.include_router(produtos_router)
 app.include_router(categories_router)
 app.include_router(sales_router)
