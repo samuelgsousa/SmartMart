@@ -17,28 +17,25 @@ class SaleDB(Base):
     produto = relationship("ProdutoDB", back_populates="sales")
 
 # --- Schemas Pydantic ---
-class SaleCreate(BaseModel):
+class SaleBase(BaseModel):
     product_id: int
     quantity: int
     total_price: float
     date: date
 
-# class SaleResponse(SaleCreate):
-#     id: int
-#     #product_name: str
-#     class Config:
-#         from_attributes = True
+class SaleCreate(SaleBase):
+    pass
 
-class SaleResponse(BaseModel):
+class SaleCreateResponse(SaleBase):
     id: int
-    product_id: int
-    quantity: int
-    total_price: float
-    date: date
 
-    # novo campo para enviar o nome
-    product_name: str
-    
+    class Config:
+        orm_mode = True
+
+class SaleRead(SaleBase):
+    id: int
+    product_name: str   # só o GET precisa disso
+
     class Config:
         orm_mode = True
         
@@ -54,17 +51,17 @@ def get_db():
     finally:
         db.close()
 
-@router.get("/", response_model=List[SaleResponse])
+@router.get("/", response_model=List[SaleRead])
 def listar_vendas(db: Session = Depends(get_db)):
 
     sales = (
         db.query(SaleDB)
           .options(joinedload(SaleDB.produto))  # carrega o produto junto
           .all()
-    )
+          )
 
     return [
-        SaleResponse(
+        SaleRead(
             id=s.id,
             product_id=s.product_id,
             quantity=s.quantity,
@@ -78,7 +75,7 @@ def listar_vendas(db: Session = Depends(get_db)):
     query = db.query(SaleDB)
     return query.all()
 
-@router.post("/", response_model=SaleResponse)
+@router.post("/", response_model=SaleCreateResponse)
 def criar_venda(venda: SaleCreate, db: Session = Depends(get_db)):
     nova_venda = SaleDB(**venda.model_dump())
 
@@ -87,7 +84,7 @@ def criar_venda(venda: SaleCreate, db: Session = Depends(get_db)):
     db.refresh(nova_venda)
     return nova_venda
 
-@router.put("/{venda_id}", response_model=SaleResponse)
+@router.put("/{venda_id}", response_model=SaleBase)
 async def atualizar_venda(venda_id: int, venda: SaleCreate):
     db = SessionLocal()
     
