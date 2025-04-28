@@ -14,7 +14,7 @@
       "target": "ESNext",                   // ou “ES2022”+
       "jsx": "react-jsx",                   // JSX automático
       "esModuleInterop": true,              // habilita default imports de CJS
-      "allowSyntheticDefaultImports": true, 
+      "allowSyntheticDefaultImports": true,
       "forceConsistentCasingInFileNames": true,
       "skipLibCheck": true,
       "baseUrl": ".",

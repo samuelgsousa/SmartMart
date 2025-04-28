@@ -10,7 +10,7 @@
       "skipLibCheck": true,
   
       /* Modo bundler (para resolver imports como o Vite espera) */
-      "moduleResolution": "bundler",
+      "moduleResolution": "nodenext",  
       "allowImportingTsExtensions": true,
       "verbatimModuleSyntax": true,
       "moduleDetection": "force",
@@ -26,7 +26,7 @@
       "noFallthroughCasesInSwitch": true,
       "noUncheckedSideEffectImports": true
     },
-    /* Aplica essas regras apenas ao vite.config.ts */
+    /* Aplica essas regras apenas ao seu vite.config.ts */
     "include": ["vite.config.ts"]
   }
   
