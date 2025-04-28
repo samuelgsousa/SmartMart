@@ -12,25 +12,6 @@ import {
 
 import SalesService from "./services/sales.service" 
 
-// Função para “humanizar” a chave, ex: "total_price" -> "Total Price"
-
-const humanize = (key: string) =>
-    key
-      .split("_")
-      .map(w => w[0].toUpperCase() + w.slice(1))
-      .join(" ");
-
-// Formata valores conforme a coluna, ex: data ou preço
-const formatCellValue = (value: any, key: string) => {
-    if (key === "date" && typeof value === "string") {
-      return new Date(value).toLocaleDateString();
-    }
-    if (key === "total_price" && typeof value === "number") {
-      return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-    }
-    return String(value);
-  };
-  
 
 
 function App() {
@@ -51,7 +32,7 @@ function App() {
         <h1 className="text-3xl font-bold underline">Smart Mart</h1>
 
         <Table>
-            <TableCaption>A list of your recent invoices.</TableCaption>
+            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
             <TableHeader>
                 <TableRow>
                     <TableHead key={"product_name"}>Product Name</TableHead>
