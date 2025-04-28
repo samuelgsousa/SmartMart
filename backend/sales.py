@@ -73,3 +73,20 @@ async def atualizar_venda(venda_id: int, venda: SaleCreate):
     db.close()
     
     return db_sale
+
+@router.delete("/{venda_id}")
+async def excluir_venda(venda_id: int):
+    db = SessionLocal()
+    
+    # Busca a venda no banco
+    db_sale = db.query(SaleDB).filter(SaleDB.id == venda_id).first()
+
+    if not db_sale:
+        raise HTTPException(status_code=404, detail=f"Venda com ID {venda_id} não encontrada")
+    
+    db.delete(db_sale)
+    db.commit()
+    db.close()
+
+    return {"mensagem": f"Venda com ID {venda_id} excluída com sucesso"}
+
