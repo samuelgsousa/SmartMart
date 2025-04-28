@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+      // Onde guardar o cache da build incremental
+      "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+  
+      // Configurações específicas para Node
+      "target": "ES2022",
+      "lib": ["ES2023"],
+      "module": "ESNext",
+      "skipLibCheck": true,
+  
+      /* Modo bundler (para resolver imports como o Vite espera) */
+      "moduleResolution": "bundler",
+      "allowImportingTsExtensions": true,
+      "verbatimModuleSyntax": true,
+      "moduleDetection": "force",
+  
+      /* Não emite arquivos JS a partir daqui */
+      "noEmit": true,
+  
+      /* Regras de linting mais rígidas */
+      "strict": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "erasableSyntaxOnly": true,
+      "noFallthroughCasesInSwitch": true,
+      "noUncheckedSideEffectImports": true
+    },
+    /* Aplica essas regras apenas ao vite.config.ts */
+    "include": ["vite.config.ts"]
+  }
+  
