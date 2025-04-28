@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 from pydantic import BaseModel
 from typing import Optional, List
-from database import SessionLocal, Base, engine
+from database import SessionLocal, Base
 from sqlalchemy import Column, Integer, String, Float
 
 # --- Modelo SQLAlchemy ---
@@ -14,6 +14,7 @@ class ProdutoDB(Base):
     price = Column(Float)
     category_id = Column(Integer)
     brand = Column(String(45))
+    sales = relationship("SaleDB", back_populates="produto")
 
 # --- Schemas Pydantic ---
 class ProdutoCreate(BaseModel):

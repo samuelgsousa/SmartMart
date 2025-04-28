@@ -1,19 +1,20 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload, relationship
 from pydantic import BaseModel
 from typing import Optional, List
 from database import SessionLocal, Base, engine
-from sqlalchemy import Column, Integer, Date, Float
+from sqlalchemy import Column, Integer, Date, Float, ForeignKey
 from datetime import date 
 
 # --- Modelo SQLAlchemy ---
 class SaleDB(Base):
     __tablename__ = "sales"
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer)
+    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     quantity = Column(Integer)
     total_price = Column(Float)
     date = Column(Date)
+    produto = relationship("ProdutoDB", back_populates="sales")
 
 # --- Schemas Pydantic ---
 class SaleCreate(BaseModel):
@@ -22,10 +23,25 @@ class SaleCreate(BaseModel):
     total_price: float
     date: date
 
-class SaleResponse(SaleCreate):
+# class SaleResponse(SaleCreate):
+#     id: int
+#     #product_name: str
+#     class Config:
+#         from_attributes = True
+
+class SaleResponse(BaseModel):
     id: int
+    product_id: int
+    quantity: int
+    total_price: float
+    date: date
+
+    # novo campo para enviar o nome
+    product_name: str
+    
     class Config:
-        from_attributes = True
+        orm_mode = True
+        
 
 # --- Rotas ---
 
@@ -40,6 +56,25 @@ def get_db():
 
 @router.get("/", response_model=List[SaleResponse])
 def listar_vendas(db: Session = Depends(get_db)):
+
+    sales = (
+        db.query(SaleDB)
+          .options(joinedload(SaleDB.produto))  # carrega o produto junto
+          .all()
+    )
+
+    return [
+        SaleResponse(
+            id=s.id,
+            product_id=s.product_id,
+            quantity=s.quantity,
+            total_price=s.total_price,
+            date=s.date,
+            product_name=s.produto.name
+        )
+        for s in sales
+    ]
+
     query = db.query(SaleDB)
     return query.all()
 
