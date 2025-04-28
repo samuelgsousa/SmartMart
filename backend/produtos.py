@@ -54,10 +54,7 @@ def listar_produtos(db: Session = Depends(get_db), price_min: float = None):
     return query.all()
 
 @router.put("/{produto_id}", response_model=ProdutoResponse)
-async def atualizar_produto(
-    produto_id: int, 
-    produto: ProdutoCreate  # Reutiliza o modelo de criação (todos campos obrigatórios)
-):
+async def atualizar_produto(produto_id: int, produto: ProdutoCreate):
     db = SessionLocal()
     
     # Busca o produto no banco
