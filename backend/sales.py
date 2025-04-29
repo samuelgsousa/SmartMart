@@ -120,5 +120,5 @@ async def excluir_venda(venda_id: int):
     db.commit()
     db.close()
 
-    return {"mensagem": f"Venda com ID {venda_id} excluída com sucesso"}
+    return {"mensagem": f"Venda com ID {venda_id} excluída com sucesso", "status": "ok"}
 
