@@ -21,7 +21,7 @@ const SalesService = {
     },
     delete: async (sale_id) => {
         try {
-            const response = await httpClient.delete(`/sales${sale_id}`)
+            const response = await httpClient.delete(`/sales/${sale_id}`)
             return response
         } catch (error) {
             console.error('Erro ao deletar venda!', error);
