@@ -10,19 +10,15 @@ import {
   } from "@/components/ui/table";
 
 import {useSales} from '../hooks/useSales'
+import SalesForm from '@/components/forms/SalesForm';
 
-import SalesService from "../services/sales.service" 
+
 
 const Dashboard = () => {
-    //const [sales, setSales] = useState<any[]>([]);
 
     const {sales, isLoading, isFetching, isError,refetch} = useSales()
 
-    // useEffect(() => {
-    //     SalesService.getAll().then(data => {
-    //       setSales(data);
-    //     });
-    //   }, []);
+
 
     return (
         <>
@@ -50,6 +46,8 @@ const Dashboard = () => {
             ))}
             </TableBody>
         </Table>
+
+        <SalesForm/>
 
       
         </>
