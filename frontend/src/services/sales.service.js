@@ -16,7 +16,16 @@ const SalesService = {
             return response
         } catch (error) {
             console.error('Erro ao registrar nova venda!', error);
-            return error;
+            throw new Error(error)
+        }
+    },
+    delete: async (sale_id) => {
+        try {
+            const response = await httpClient.delete(`/sales${sale_id}`)
+            return response
+        } catch (error) {
+            console.error('Erro ao deletar venda!', error);
+            throw new Error(error)
         }
     }
 }
