@@ -18,34 +18,80 @@ import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover
 import { cn } from "@/lib/utils"
 import { Calendar } from "../ui/calendar"
 import { CalendarIcon } from "lucide-react"
-import { format } from "date-fns"
+import { format  } from "date-fns"
 import SalesService from "../../services/sales.service"
 import {useSales} from '../../hooks/useSales'
 
 
 
 const formSchema = z.object({
-    username: z.string().min(2, {
-      message: "Username must be at least 2 characters.",
-    }),
+    product_id: z.coerce    .number({
+        invalid_type_error: "Selecione um produto válido", // Se não for número
+      })
+      .positive("Selecione um produto")
+      .min(1, "Selecione um produto"),
+
+    total_price: z.coerce
+    .number({
+      invalid_type_error: "Preço deve ser um número",
+    })
+    .positive("Preço não pode ser negativo"),
+
+    quantity: z.coerce
+    .number({
+      invalid_type_error: "Quantidade deve ser um número",
+    })
+    .int("Quantidade deve ser inteira")
+    .positive("Quantidade não pode ser zero")
+    .min(1, "Quantidade mínima é 1"),
+
+    date: z.string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: "Formato de data inválido (Use YYYY-MM-DD)",
+    })
+    .refine(date => {
+      const parsedDate = new Date(date);
+      return !isNaN(parsedDate.getTime());
+    }, { message: "Data inválida" })
+
   })
 
 const SalesForm = () => {
 
     const {refetch} = useSales()
+    
 
-    const form = useForm()
+    function getCurrentDateLocal(): string {
+        const now = new Date()
+        const offsetMinutes = now.getTimezoneOffset()
+        const correctedMs = now.getTime() + offsetMinutes * 60 * 10000
+        const localDate = new Date(correctedMs)
+      
+        const iso = localDate.toISOString()      
+        return iso.slice(0, 10)                  
+      }
+
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            product_id: 0, //ATUALIZAR PARA OBTER O PRIMEIRO PRODUTO QUE ENCONTRAR
+            total_price: null,
+            quantity: null,
+            date: getCurrentDateLocal(),
+          },
+    })
 
     const onSubmit = async (data) => {
 
         console.log("dados a serem enviados: ", data)
 
         try {
-            const response = await SalesService.create(data)
+             const response = await SalesService.create(data)
 
-            if (response) refetch()
+             if (response) refetch() //atualiza a tabela
 
-            console.log(response)
+             console.log(response)
         } catch (error) {
             console.log('Erro ao enviar venda')
         }
@@ -60,13 +106,14 @@ const SalesForm = () => {
             render={({ field }) => (
                 <FormItem>
                     <FormLabel>Product</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
+                        <Select onValueChange={field.onChange} value={String(field.value)}>
                             <FormControl>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select a product" />
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
+                                <SelectItem value="0">Selecione um produto</SelectItem>
                                 <SelectItem value="1">Monitor 4k</SelectItem>
                                 <SelectItem value="2">iPhone 15</SelectItem>
                             </SelectContent>
@@ -112,7 +159,7 @@ const SalesForm = () => {
           name="date"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
+              <FormLabel>Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -132,17 +179,15 @@ const SalesForm = () => {
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className="w-auto p-0 bg-background z-50" align="start">
                   <Calendar
                     mode="single"
-                    selected={field.value}
+                    selected={null}
                     onSelect={(date) => {
                         const isoDate = date?.toISOString().split('T')[0];
                         field.onChange(isoDate);
                       }}
-                    disabled={(date) =>
-                      date > new Date() || date < new Date("1900-01-01")
-                    }
+
                     initialFocus
                   />
                 </PopoverContent>
