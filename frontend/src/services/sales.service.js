@@ -25,7 +25,7 @@ const SalesService = {
             return response
         } catch (error) {
             console.error('Erro ao deletar venda!', error);
-            throw new Error(error)
+            throw new Error(error.response.data.detail)
         }
     }
 }

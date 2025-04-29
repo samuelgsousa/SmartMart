@@ -25,7 +25,7 @@ export const useSales = () => {
             return response;
             
         } catch (error) {
-            throw new Error(error)
+            alert(`Erro ao deletar venda! ${error}`)
         }
         
     }
