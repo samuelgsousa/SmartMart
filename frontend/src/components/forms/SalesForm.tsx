@@ -75,7 +75,7 @@ const SalesForm = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            product_id: 0, //ATUALIZAR PARA OBTER O PRIMEIRO PRODUTO QUE ENCONTRAR
+            product_id: 0,
             total_price: null,
             quantity: null,
             date: getCurrentDateLocal(),
@@ -98,8 +98,12 @@ const SalesForm = () => {
     }
 
     return (
+
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+
+            {/* Select do produto */}
           <FormField
             control={form.control}
             name="product_id"
@@ -122,7 +126,8 @@ const SalesForm = () => {
                 </FormItem>
             )}
             />
-
+            
+        {/* Valor da venda */}
             <FormField
               control={form.control}
               name="total_price"
@@ -139,6 +144,7 @@ const SalesForm = () => {
               )}
             />
 
+        {/* Quantidade do produto */}
             <FormField
               control={form.control}
               name="quantity"
@@ -154,6 +160,7 @@ const SalesForm = () => {
               )}
             />
 
+            {/* Data da venda */}
         <FormField
           control={form.control}
           name="date"
