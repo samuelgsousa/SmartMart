@@ -81,7 +81,7 @@ const Dashboard = () => {
             </TableBody>
         </Table>
 
-        <Button onClick={() => handleNewSale()}>New Sale</Button>
+        <Button variant="success" onClick={() => handleNewSale()}>New Sale</Button>
 
         <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
 
@@ -89,7 +89,7 @@ const Dashboard = () => {
             <DialogContent>
                 <DialogHeader><DialogTitle>{saleUpdating ? `Update sale ${saleUpdating.id}` : 'New Sale'}</DialogTitle></DialogHeader>
 
-                <SalesForm saleUpdating={saleUpdating}/>
+                <SalesForm saleUpdating={saleUpdating} onSuccess={() => setDialogIsOpen(false)}/>
 
             </DialogContent>
         </Dialog>
