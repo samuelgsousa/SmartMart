@@ -12,6 +12,8 @@ export const useSales = () => {
             staleTime: 60_000
         });
 
+      //Mutações
+
         const createMutation = useMutation({
             mutationFn: SalesService.create,
             onSuccess: () => {
