@@ -19,8 +19,6 @@ import { cn } from "@/lib/utils"
 import { Calendar } from "../ui/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format  } from "date-fns"
-import SalesService from "../../services/sales.service"
-import ProductsService from "../../services/products.service"
 import {useSales} from '../../hooks/useSales'
 import {useProducts} from '../../hooks/useProducts'
 import { useEffect, useState } from "react"
@@ -63,7 +61,7 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
 
   const {products} = useProducts<Product[] | null>()
     
-  const {refetch} = useSales()
+  const {refetch, updateSale, createSale} = useSales()
     
 
     function getCurrentDateLocal(): string {
@@ -90,8 +88,8 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
     const onSubmit = async (data) => {
         try {
           let response: any = null
-          if (saleUpdating) response = await SalesService.update(saleUpdating.id, data)
-          else response = await SalesService.create(data)
+          if (saleUpdating) response = await updateSale(saleUpdating.id, data)
+          else response = await createSale(data)
 
           if (response) refetch() //atualiza a tabela
 

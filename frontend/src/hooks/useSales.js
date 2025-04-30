@@ -4,8 +4,6 @@ import SalesService from "../services/sales.service"
 export const useSales = () => {
     const queryClient = useQueryClient();
 
-
-
     const query = useQuery({
         queryKey: ['sales'],
         queryFn: async () => {
@@ -17,6 +15,28 @@ export const useSales = () => {
         // Configuração de cache
         staleTime: 60 * 1000 // 1 minuto
     })
+
+    const createSale = async (data) => {
+        try {
+            const response = await SalesService.create(data)
+            query.refetch()
+            return response;
+            
+        } catch (error) {
+            alert(`Erro ao registrar venda! ${error}`)
+        }
+    }
+
+    const updateSale = async (sale_id, data) => {
+        try {
+            const response = await SalesService.update(sale_id, data)
+            query.refetch()
+            return response;
+            
+        } catch (error) {
+            alert(`Erro ao atualizar a venda ${sale_id} ${error}`)
+        }
+    }
 
     const deleteSale = async (sale_id) => {
         try {
@@ -36,6 +56,9 @@ export const useSales = () => {
         isFetching: query.isFetching,
         isError: query.isError,
         refetch: query.refetch,
-        deleteSale
+        createSale,
+        updateSale,
+        deleteSale,
+
     }
 }
