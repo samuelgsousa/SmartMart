@@ -22,8 +22,10 @@ import { format  } from "date-fns"
 import SalesService from "../../services/sales.service"
 import ProductsService from "../../services/products.service"
 import {useSales} from '../../hooks/useSales'
+import {useProducts} from '../../hooks/useProducts'
 import { useEffect, useState } from "react"
 import { Product } from "@/interfaces/interfaces"
+
 
 const formSchema = z.object({
     product_id: z.coerce    .number({
@@ -59,23 +61,9 @@ const formSchema = z.object({
 
 const SalesForm = ({saleUpdating}) => {
 
-  const[products, setProducts] = useState<Product[] | null>(null);
-
-  useEffect(() => {
-    const getProducts = async () => {
-
-      setProducts(await ProductsService.getAll())
-      
-    }
-
-    getProducts()
-    console.log(products)
-  
-  }, []);
-
-  
+  const {products} = useProducts<Product[] | null>()
     
-    const {refetch} = useSales()
+  const {refetch} = useSales()
     
 
     function getCurrentDateLocal(): string {
