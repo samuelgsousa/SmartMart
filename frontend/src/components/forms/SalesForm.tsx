@@ -61,7 +61,7 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
 
   const {products} = useProducts<Product[] | null>()
     
-  const {refetch, updateSale, createSale} = useSales()
+  const { createSale, isCreating, updateSale, isUpdating } = useSales();
     
 
     function getCurrentDateLocal(): string {
@@ -87,17 +87,13 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
 
     const onSubmit = async (data) => {
         try {
-          let response: any = null
-          if (saleUpdating) response = await updateSale(saleUpdating.id, data)
-          else response = await createSale(data)
-
-          if (response) refetch() //atualiza a tabela
-
-          console.log(response)
+          if (saleUpdating) await updateSale({ id: saleUpdating.id, data })
+          else await createSale(data)
+          
           onSuccess()
 
         } catch (error) {
-            console.log('Erro ao enviar venda')
+            alert("Falha ao enviar venda!")
         }
     }
 
