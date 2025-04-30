@@ -2,12 +2,21 @@ import React, { useEffect, useState } from 'react';
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
   } from "@/components/ui/table";
+
+import {
+Dialog,
+DialogContent,
+DialogDescription,
+DialogHeader,
+DialogTitle,
+DialogTrigger,
+} from "@/components/ui/dialog"
+  
 
 import {useSales} from '../hooks/useSales'
 import SalesForm from '@/components/forms/SalesForm';
@@ -17,7 +26,6 @@ import { Button } from '@/components/ui/button';
 const Dashboard = () => {
 
     const {sales, isLoading, isFetching, isError, refetch, deleteSale} = useSales()
-
 
 
     return (
@@ -61,7 +69,22 @@ const Dashboard = () => {
             </TableBody>
         </Table>
 
-        <SalesForm/>
+        <Dialog>
+            <DialogTrigger>
+                <Button>New Sale</Button>
+            </DialogTrigger>
+
+
+            <DialogContent>
+                <DialogHeader><DialogTitle>Add New Sale</DialogTitle></DialogHeader>
+
+                <SalesForm/>
+
+            </DialogContent>
+        </Dialog>
+
+
+        
 
       
         </>
