@@ -59,7 +59,7 @@ const formSchema = z.object({
 
   })
 
-const SalesForm = ({saleUpdating}) => {
+const SalesForm = ({saleUpdating, onSuccess}) => {
 
   const {products} = useProducts<Product[] | null>()
     
@@ -88,9 +88,6 @@ const SalesForm = ({saleUpdating}) => {
     })
 
     const onSubmit = async (data) => {
-
-        console.log("dados a serem enviados: ", data)
-
         try {
           let response: any = null
           if (saleUpdating) response = await SalesService.update(saleUpdating.id, data)
@@ -99,6 +96,8 @@ const SalesForm = ({saleUpdating}) => {
           if (response) refetch() //atualiza a tabela
 
           console.log(response)
+          onSuccess()
+
         } catch (error) {
             console.log('Erro ao enviar venda')
         }
