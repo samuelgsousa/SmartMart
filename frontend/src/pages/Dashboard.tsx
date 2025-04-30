@@ -46,6 +46,7 @@ const Dashboard = () => {
         <Table>
             <TableHeader>
                 <TableRow>
+                    <TableHead key={"sale_id"}>Sale Id</TableHead>
                     <TableHead key={"product_name"}>Product Name</TableHead>
                     <TableHead key={"total_price"}>Total Price</TableHead>
                     <TableHead key={"quantity"}>Quantity</TableHead>
@@ -56,7 +57,8 @@ const Dashboard = () => {
             <TableBody>
             {sales.map(sale => (
                 <TableRow key={sale.id}>
-                    <TableCell key={"product_name_cell"}>{sale.id} | {sale.product_name}</TableCell>
+                    <TableCell key={"sale_id"}>{sale.id}</TableCell>
+                    <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
                     <TableCell key={"total_price_cell"}>{sale.total_price}</TableCell>
                     <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
                     <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
