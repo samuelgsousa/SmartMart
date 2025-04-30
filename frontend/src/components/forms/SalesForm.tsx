@@ -56,8 +56,11 @@ const formSchema = z.object({
 
   })
 
-const SalesForm = () => {
+const SalesForm = ({saleUpdating}) => {
 
+    if (saleUpdating) console.log("Venda para atualizar:" , saleUpdating)
+    else console.log("sem venda")
+    
     const {refetch} = useSales()
     
 
@@ -74,7 +77,7 @@ const SalesForm = () => {
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
+        defaultValues: saleUpdating || {
             product_id: 0,
             total_price: null,
             quantity: null,
