@@ -20,9 +20,10 @@ import { Calendar } from "../ui/calendar"
 import { CalendarIcon } from "lucide-react"
 import { format  } from "date-fns"
 import SalesService from "../../services/sales.service"
+import ProductsService from "../../services/products.service"
 import {useSales} from '../../hooks/useSales'
-
-
+import { useEffect, useState } from "react"
+import { Product } from "@/interfaces/interfaces"
 
 const formSchema = z.object({
     product_id: z.coerce    .number({
@@ -57,6 +58,22 @@ const formSchema = z.object({
   })
 
 const SalesForm = ({saleUpdating}) => {
+
+  const[products, setProducts] = useState<Product[] | null>(null);
+
+  useEffect(() => {
+    const getProducts = async () => {
+
+      setProducts(await ProductsService.getAll())
+      
+    }
+
+    getProducts()
+    console.log(products)
+  
+  }, []);
+
+  
     
     const {refetch} = useSales()
     
@@ -119,9 +136,10 @@ const SalesForm = ({saleUpdating}) => {
                                 </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                                <SelectItem value="0">Selecione um produto</SelectItem>
-                                <SelectItem value="1">Monitor 4k</SelectItem>
-                                <SelectItem value="2">iPhone 15</SelectItem>
+                            <SelectItem value="0">Selecione um produto</SelectItem>
+                              {products?.map(product => (
+                                <SelectItem key={product.id} value={String(product.id)}>{product.name}</SelectItem>
+                              ))}
                             </SelectContent>
                         </Select>
                     <FormMessage />
