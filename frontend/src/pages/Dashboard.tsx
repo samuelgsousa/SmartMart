@@ -85,7 +85,7 @@ const Dashboard = () => {
 
 
             <DialogContent>
-                <DialogHeader><DialogTitle>Add New Sale</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{saleUpdating ? `Update sale ${saleUpdating.id}` : 'New Sale'}</DialogTitle></DialogHeader>
 
                 <SalesForm saleUpdating={saleUpdating}/>
 
