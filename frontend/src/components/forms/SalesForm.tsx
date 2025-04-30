@@ -57,9 +57,6 @@ const formSchema = z.object({
   })
 
 const SalesForm = ({saleUpdating}) => {
-
-    if (saleUpdating) console.log("Venda para atualizar:" , saleUpdating)
-    else console.log("sem venda")
     
     const {refetch} = useSales()
     
@@ -90,11 +87,13 @@ const SalesForm = ({saleUpdating}) => {
         console.log("dados a serem enviados: ", data)
 
         try {
-             const response = await SalesService.create(data)
+          let response: any = null
+          if (saleUpdating) response = await SalesService.update(saleUpdating.id, data)
+          else response = await SalesService.create(data)
 
-             if (response) refetch() //atualiza a tabela
+          if (response) refetch() //atualiza a tabela
 
-             console.log(response)
+          console.log(response)
         } catch (error) {
             console.log('Erro ao enviar venda')
         }
