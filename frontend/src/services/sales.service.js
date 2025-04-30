@@ -19,6 +19,15 @@ const SalesService = {
             throw new Error(error)
         }
     },
+    update: async (sale_id, data) => {
+        try {
+            const response = await httpClient.put(`/sales/${sale_id}`, data);
+            return response
+        } catch (error) {
+            console.error(`Erro ao atualizar venda ${sale_id}`, error);
+            throw new Error(error)
+        }
+    },
     delete: async (sale_id) => {
         try {
             const response = await httpClient.delete(`/sales/${sale_id}`)
