@@ -38,18 +38,18 @@ export const useProducts = () => {
 
     return {
         // Query
-        sales: productsQuery.data || [],
+        products: productsQuery.data || [],
         isLoading: productsQuery.isLoading,
         isFetching: productsQuery.isFetching,
         
         // Mutations
-        createSale: createMutation.mutateAsync,
+        createProduct: createMutation.mutateAsync,
         isCreating: createMutation.isPending,
         
-        updateSale: updateMutation.mutateAsync,
+        updateProduct: updateMutation.mutateAsync,
         isUpdating: updateMutation.isPending,
         
-        deleteSale: deleteMutation.mutateAsync,
+        deleteProduct: deleteMutation.mutateAsync,
         isDeleting: deleteMutation.isPending,
         
         // Erros
