@@ -11,7 +11,6 @@ import {
 import {
 Dialog,
 DialogContent,
-DialogDescription,
 DialogHeader,
 DialogTitle,
 DialogTrigger,
@@ -26,14 +25,25 @@ import { Button } from '@/components/ui/button';
 const Dashboard = () => {
 
     const {sales, isLoading, isFetching, isError, refetch, deleteSale} = useSales()
+    const [saleUpdating, setSaleUpdating] = useState(null)
+    const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
+    const handleSaleUpdate = (sale: any) => {
+        //console.log("venda: ", sale)
+        setSaleUpdating(sale)
+        setDialogIsOpen(true)
+    }
+
+    const handleNewSale = () => {
+        setSaleUpdating(null)
+        setDialogIsOpen(true)
+    }
 
     return (
         <>
         <h1 className="text-3xl font-bold underline">Smart Mart</h1>
 
         <Table>
-            {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
             <TableHeader>
                 <TableRow>
                     <TableHead key={"product_name"}>Product Name</TableHead>
@@ -57,7 +67,7 @@ const Dashboard = () => {
                             </svg>
                         </Button>
 
-                        <Button variant="warning" size="icon">
+                        <Button variant="warning" size="icon" onClick={() => handleSaleUpdate(sale)}> 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />
                             </svg>
@@ -69,16 +79,15 @@ const Dashboard = () => {
             </TableBody>
         </Table>
 
-        <Dialog>
-            <DialogTrigger>
-                <Button>New Sale</Button>
-            </DialogTrigger>
+        <Button onClick={() => handleNewSale()}>New Sale</Button>
+
+        <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
 
 
             <DialogContent>
                 <DialogHeader><DialogTitle>Add New Sale</DialogTitle></DialogHeader>
 
-                <SalesForm/>
+                <SalesForm saleUpdating={saleUpdating}/>
 
             </DialogContent>
         </Dialog>
