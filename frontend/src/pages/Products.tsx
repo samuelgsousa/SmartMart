@@ -67,7 +67,7 @@ const Products = () => {
         <DialogContent>
             <DialogHeader><DialogTitle>New Product</DialogTitle></DialogHeader>
 
-            <ProductsForm productUpdating={null} onSuccess={undefined}/>
+            <ProductsForm productUpdating={null} onSuccess={() => setDialogIsOpen(false)}/>
 
         </DialogContent>
         </Dialog>
