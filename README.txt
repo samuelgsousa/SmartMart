@@ -14,3 +14,5 @@ Iniciar backend: `uvicorn main:app --reload`
 NOTA: NÃO ESQUECER DE CRIAR A ROTA POST PARA ADICIONAR PRODUTOS POR UM ARQUIVO CSV!!!
 
 NOTA: CRIAR UM SCRIPT PARA CONFIGURAÇÃO DO BANCO DE DADOS
+
+NOTA: Adicionar validação ao adicionar categorias, para evitar duplicações
