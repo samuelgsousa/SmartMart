@@ -58,7 +58,7 @@ const formSchema = z.object({
 
 const SalesForm = ({saleUpdating, onSuccess}) => {
 
-  const {products} = useProducts<Product[] | null>()
+  const {products} = useProducts()
     
   const { createSale, isCreating, updateSale, isUpdating } = useSales();
     
