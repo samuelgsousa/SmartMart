@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select"
 
 import { useCategories } from "@/hooks/useCategories"
-
+import { useProducts } from "@/hooks/useProducts"
 
 
 const formSchema = z.object({
@@ -44,6 +44,7 @@ const formSchema = z.object({
 const ProductsForm = ({productUpdating, onSuccess}) => {
 
     const {categories} = useCategories()
+    const {createProduct} = useProducts()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -58,6 +59,13 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
 
     const onSubmit = async (data) => {
         console.log("Dados a serem enviados: ", data)
+
+        try {
+            await createProduct(data)
+            onSuccess()
+        } catch (error) {
+            alert("Falha ao enviar produto!")
+        }
     }
 
     return (
