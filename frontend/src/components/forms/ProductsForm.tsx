@@ -113,7 +113,7 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
               )}
             />
 
-                        {/* Select do produto */}
+        {/* Select da categoria */}
           <FormField
             control={form.control}
             name="category_id"
@@ -138,6 +138,22 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
                     <FormMessage />
                 </FormItem>
             )}
+            />
+
+            {/* Marca do produto */}
+            <FormField
+              control={form.control}
+              name="brand"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Brand</FormLabel>
+                    <FormControl>
+                        <Input type={"text"} placeholder="description" {...field} />
+                    </FormControl>
+                  <FormMessage />
+                </FormItem>
+                
+              )}
             />
 
             <Button type="submit">Submit</Button>
