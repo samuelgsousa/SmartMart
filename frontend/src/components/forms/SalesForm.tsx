@@ -21,7 +21,6 @@ import { CalendarIcon } from "lucide-react"
 import { format  } from "date-fns"
 import {useSales} from '../../hooks/useSales'
 import {useProducts} from '../../hooks/useProducts'
-import { useEffect, useState } from "react"
 import { Product } from "@/interfaces/interfaces"
 
 
