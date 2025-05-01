@@ -6,6 +6,8 @@ Atualizar requirements: pip freeze > requirements.txt
 
 Ativar ambiente virtual: `.\venv\Scripts\activate`
 
+instalar dependências: `pip install -r requirements.txt`
+
 Iniciar backend: `uvicorn main:app --reload`
 
 
