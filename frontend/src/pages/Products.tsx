@@ -16,14 +16,16 @@ DialogTitle,
 } from "@/components/ui/dialog"
 
 import {useProducts} from '../hooks/useProducts'
+import { Button } from '@/components/ui/button';
 
 const Products = () => {
 
     const {products} = useProducts()
+    const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
-    useEffect(() => {
-        if (products) console.log(products)
-    }, [products]);
+    const handleNewProduct = () => {
+        setDialogIsOpen(true)
+    }
 
     return (
         <>
@@ -55,6 +57,19 @@ const Products = () => {
                 ))}
             </TableBody>
         </Table>
+
+        <Button variant="success" onClick={() => handleNewProduct()}>New Product</Button>
+
+        <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
+
+
+        <DialogContent>
+            <DialogHeader><DialogTitle>New Product</DialogTitle></DialogHeader>
+
+            <p>Aqui vai ficar o formulário de produto</p>
+
+        </DialogContent>
+        </Dialog>
 
         </>
     )
