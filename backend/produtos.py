@@ -54,11 +54,20 @@ def get_db():
 
 @router.post("/", response_model=ProdutoResponse)
 def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
+
+    # Cria o produto
     novo_produto = ProdutoDB(**produto.model_dump())
     db.add(novo_produto)
     db.commit()
     db.refresh(novo_produto)
-    return novo_produto
+
+    # Carrega a relação explicitamente
+    db.refresh(novo_produto, ["category"])
+    
+    return ProdutoResponse(
+        **novo_produto.__dict__,
+        category_name=novo_produto.category.name
+    )
 
 @router.get("/", response_model=List[ProdutoResponse])
 def listar_produtos(db: Session = Depends(get_db), price_min: float = None):
