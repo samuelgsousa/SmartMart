@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, relationship
 from pydantic import BaseModel
 from typing import List
 from database import SessionLocal, Base, engine
@@ -10,6 +10,7 @@ class CategoryDB(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(45))
+    produto = relationship("ProdutoDB", back_populates="category")
 
 # --- Schemas Pydantic ---
 class CategoryCreate(BaseModel):

@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, relationship
+from sqlalchemy.orm import Session, relationship, joinedload
 from pydantic import BaseModel
 from typing import Optional, List
 from database import SessionLocal, Base
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, Float
 
 # --- Modelo SQLAlchemy ---
 class ProdutoDB(Base):
@@ -12,20 +12,33 @@ class ProdutoDB(Base):
     name = Column(String(255))
     description = Column(String)
     price = Column(Float)
-    category_id = Column(Integer)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+
     brand = Column(String(45))
     sales = relationship("SaleDB", back_populates="produto")
+    category = relationship("CategoryDB", back_populates="produto")
 
 # --- Schemas Pydantic ---
-class ProdutoCreate(BaseModel):
+
+class ProdutoBase(BaseModel):
     name: str
     description: Optional[str] = None
     price: float
     category_id: int
     brand: str
 
-class ProdutoResponse(ProdutoCreate):
+class ProdutoCreate(ProdutoBase):
+    pass
+    # name: str
+    # description: Optional[str] = None
+    # price: float
+    # category_id: int
+    # brand: str
+
+class ProdutoResponse(ProdutoBase):
     id: int
+    category_name: str
+
     class Config:
         from_attributes = True
 
@@ -49,10 +62,30 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[ProdutoResponse])
 def listar_produtos(db: Session = Depends(get_db), price_min: float = None):
-    query = db.query(ProdutoDB)
+    
+    query = (
+        db.query(ProdutoDB)
+            .options(joinedload(ProdutoDB.category))
+    )
+
     if price_min:
         query = query.filter(ProdutoDB.price >= price_min)
-    return query.all()
+
+    produtos = query.all()
+
+  #  return query.all()
+    return [
+        ProdutoResponse(
+            id=produto.id,
+            name=produto.name,
+            description=produto.description,
+            price=produto.price,
+            category_id=produto.category_id,
+            brand=produto.brand,
+            category_name=produto.category.name if produto.category else "Sem categoria"
+        )
+        for produto in produtos
+    ]
 
 @router.put("/{produto_id}", response_model=ProdutoResponse)
 async def atualizar_produto(produto_id: int, produto: ProdutoCreate):
