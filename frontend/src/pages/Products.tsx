@@ -45,11 +45,11 @@ const Products = () => {
                 {products.map(product => (
                     <TableRow key={`product_row_${product.id}`}>
                         <TableCell key={`product_id_${product.id}`}>{product.id}</TableCell>
-                        <TableCell key={`product_name_${product.name}`}>{product.name}</TableCell>
-                        <TableCell key={`product_description_${product.description}`}>{product.description}</TableCell>
-                        <TableCell key={`product_price_${product.price}`}>{product.price}</TableCell>
-                        <TableCell key={`product_category_id_${product.category_id}`}>{product.category_id}</TableCell>
-                        <TableCell key={`product_brand_${product.brand}`}>{product.brand}</TableCell>
+                        <TableCell key={`product_name_${product.id}`}>{product.name}</TableCell>
+                        <TableCell key={`product_description_${product.id}`}>{product.description}</TableCell>
+                        <TableCell key={`product_price_${product.id}`}>{product.price}</TableCell>
+                        <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
+                        <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
                     </TableRow>
 
                 ))}
