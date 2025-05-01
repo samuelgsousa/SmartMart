@@ -13,9 +13,10 @@ import {
   } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
-import {useProducts} from '../../hooks/useProducts'
-import { Product } from "@/interfaces/interfaces"
+
+import { useCategories } from "@/hooks/useCategories"
+
+
 
 const formSchema = z.object({
     name: z.string() // Primeiro verifica se é string
@@ -41,6 +42,8 @@ const formSchema = z.object({
   })
 
 const ProductsForm = ({productUpdating, onSuccess}) => {
+
+    const {categories} = useCategories()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -126,9 +129,9 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
                             <SelectContent>
                             <SelectItem value="0">Select a category</SelectItem>
 
-                              {/* {products?.map(product => (
-                                <SelectItem key={product.id} value={String(product.id)}>{product.name}</SelectItem>
-                              ))} */}
+                               {categories?.map(category => (
+                                <SelectItem key={category.id} value={String(category.id)}>{category.name}</SelectItem>
+                              ))} 
 
                             </SelectContent>
                         </Select>
