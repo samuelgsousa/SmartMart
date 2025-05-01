@@ -16,3 +16,8 @@ export interface Sale {
     quantity: number
     date: Date
 }
+
+export interface Category {
+  id: number
+  name: string
+}
