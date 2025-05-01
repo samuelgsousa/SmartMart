@@ -12,10 +12,21 @@ export const useCategories = () => {
         staleTime: 60_000
     });
 
+    //Mutações
+
+    const createMutation = useMutation({
+        mutationFn: CategoriesService.create,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['categories'] });
+        }
+        });
+
     return {
         // Query
         categories: categoriesQuery.data || [],
         isLoading: categoriesQuery.isLoading,
         isFetching: categoriesQuery.isFetching,
+
+        // Mutations
 };
 }
