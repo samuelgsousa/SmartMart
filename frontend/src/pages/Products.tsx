@@ -17,6 +17,7 @@ DialogTitle,
 
 import {useProducts} from '../hooks/useProducts'
 import { Button } from '@/components/ui/button';
+import ProductsForm from '@/components/forms/ProductsForm';
 
 const Products = () => {
 
@@ -66,7 +67,7 @@ const Products = () => {
         <DialogContent>
             <DialogHeader><DialogTitle>New Product</DialogTitle></DialogHeader>
 
-            <p>Aqui vai ficar o formulário de produto</p>
+            <ProductsForm productUpdating={null} onSuccess={undefined}/>
 
         </DialogContent>
         </Dialog>
