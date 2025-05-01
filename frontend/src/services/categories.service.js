@@ -9,6 +9,15 @@ const CategoriesService = {
             console.error('Erro ao buscar categorias', error)
             throw new Error(error)
         }
+    },
+    create: async (data) => {
+        try {
+            const response = await httpClient.post('/categories', data);
+            return response
+        } catch (error) {
+            console.error('Erro ao buscar categorias', error);
+            throw new Error(error)
+        }
     }
 }
 
