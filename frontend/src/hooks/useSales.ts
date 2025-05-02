@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient, useMutationState } from '@tanstack/react-query'
 import SalesService from "../services/sales.service"
 import {Sale}  from "@/interfaces/interfaces"
 
@@ -31,9 +31,18 @@ export const useSales = () => {
         
           const deleteMutation = useMutation({
             mutationFn: (id: string) => SalesService.delete(id),
+            mutationKey: ['deleteSale'],
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: ['sales'] });
             }
+          });
+
+          const deletingStates = useMutationState({
+            filters: { mutationKey: ['deleteSale'] },
+            select: (mutation) => ({
+              id: mutation.state.variables as number,
+              isDeleting: mutation.state.status === 'pending'
+            })
           });
 
           return {
@@ -50,7 +59,7 @@ export const useSales = () => {
             isUpdating: updateMutation.isPending,
             
             deleteSale: deleteMutation.mutateAsync,
-            isDeleting: deleteMutation.isPending,
+            deletingStates,
             
             // Erros
             error: salesQuery.error || 
