@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "..
 import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover"
 import { cn } from "@/lib/utils"
 import { Calendar } from "../ui/calendar"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, Loader2 } from "lucide-react"
 import { format  } from "date-fns"
 import {useSales} from '../../hooks/useSales'
 import {useProducts} from '../../hooks/useProducts'
@@ -204,7 +204,9 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
           )}
         />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isCreating || isUpdating} className="w-20">
+                { isCreating || isUpdating ? <Loader2 className="animate-spin"/> : <>Submit</>}
+            </Button>
           </form>
         </Form>
       )
