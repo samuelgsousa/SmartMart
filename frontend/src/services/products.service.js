@@ -19,6 +19,17 @@ const ProductsService = {
             throw new Error(error)
         }
     },
+    bulkCreate: async (formData) =>{
+
+        
+        const response = await httpClient.post('/produtos/bulk', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          return response.data
+    },
+
     update: async (product_id, data) => {
         try {
             const response = await httpClient.put(`/produtos/${product_id}`, data);
