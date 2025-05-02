@@ -115,6 +115,15 @@ async def atualizar_produto(produto_id: int, produto: ProdutoCreate):
     
     db.commit()
     db.refresh(db_produto)
+
+    # Carrega a relação explicitamente
+    db.refresh(db_produto, ["category"])
+    
+    return ProdutoResponse(
+        **db_produto.__dict__,
+        category_name=db_produto.category.name
+    )
+
     db.close()
     
     return db_produto
