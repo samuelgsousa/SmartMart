@@ -19,6 +19,24 @@ const ProductsService = {
             throw new Error(error)
         }
     },
+    update: async (product_id, data) => {
+        try {
+            const response = await httpClient.put(`/produtos/${product_id}`, data);
+            return response
+        } catch (error) {
+            console.error(`Erro ao atualizar produto ${product_id}`, error);
+            throw new Error(error)
+        }
+    },
+    delete: async (product_id) => {
+        try {
+            const response = await httpClient.delete(`/produtos/${product_id}`)
+            return response
+        } catch (error) {
+            console.error('Erro ao deletar produto!', error);
+            throw new Error(error.response.data.detail)
+        }
+    }
 }
 
 export default ProductsService
