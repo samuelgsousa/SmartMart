@@ -109,12 +109,12 @@ const Products = () => {
         <>
 
         
-        <Tabs defaultValue="account" >
+        <Tabs defaultValue="products_tab" >
         <TabsList>
-            <TabsTrigger value="account">Products</TabsTrigger>
+            <TabsTrigger value="products_tab">Products</TabsTrigger>
             <TabsTrigger value="password">Categories</TabsTrigger>
         </TabsList>
-        <TabsContent value="account"> <TabProducts/> </TabsContent>
+        <TabsContent value="products_tab"> <TabProducts/> </TabsContent>
         
         <TabsContent value="password">Categorias ficarão aqui</TabsContent>
         </Tabs>
