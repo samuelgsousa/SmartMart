@@ -24,7 +24,7 @@ import { Trash2, Pencil, Loader2   } from "lucide-react";
 
 const Dashboard = () => {
 
-    const {sales, isLoading, isFetching, isError, refetch, deleteSale, deletingStates} = useSales()
+    const {sales, isLoading, isFetching, isError, deleteSale, deletingStates} = useSales()
     const [saleUpdating, setSaleUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
