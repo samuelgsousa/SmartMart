@@ -22,7 +22,7 @@ export const useSales = () => {
           });
         
           const updateMutation = useMutation({
-            mutationFn: (params: { id: string; data: any }) => 
+            mutationFn: (params: { id: number; data: any }) => 
               SalesService.update(params.id, params.data),
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: ['sales'] });
@@ -30,7 +30,7 @@ export const useSales = () => {
           });
         
           const deleteMutation = useMutation({
-            mutationFn: (id: string) => SalesService.delete(id),
+            mutationFn: (id: number) => SalesService.delete(id),
             mutationKey: ['deleteSale'],
             onSuccess: () => {
               queryClient.invalidateQueries({ queryKey: ['sales'] });
