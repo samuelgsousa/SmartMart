@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
 import { Trash2, Pencil, Loader2   } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-
+import { CsvUploader } from '@/components/CsvUploader';
 
 
 const Products = () => {
@@ -87,6 +87,8 @@ const Products = () => {
                 ))}
             </TableBody>
         </Table>
+
+        <CsvUploader/>
 
         <Button variant="success" onClick={() => handleNewProduct()}>New Product</Button>
 
