@@ -19,14 +19,17 @@ DialogTitle,
 import {useSales} from '../hooks/useSales'
 import SalesForm from '@/components/forms/SalesForm';
 import { Button } from '@/components/ui/button';
-import { Trash2, Pencil   } from "lucide-react";
+import { Trash2, Pencil, Loader2   } from "lucide-react";
 
 
 const Dashboard = () => {
 
-    const {sales, isLoading, isFetching, isError, refetch, deleteSale} = useSales()
+    const {sales, isLoading, isFetching, isError, refetch, deleteSale, deletingStates} = useSales()
     const [saleUpdating, setSaleUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
+
+    // Função auxiliar para verificar o estado ao deletar um produto
+    const isDeleting = (saleId: number) => deletingStates.some(state => state.id === saleId && state.isDeleting);
 
     const handleSaleUpdate = (sale: any) => {
         //console.log("venda: ", sale)
@@ -63,8 +66,15 @@ const Dashboard = () => {
                     <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
                     <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
                     <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
-                        <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)}>
-                         <Trash2 className="h-5 w-5" />
+
+                        <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)} disabled={isDeleting(sale.id)}>
+
+                            {isDeleting(sale.id) ? 
+                            ( <Loader2 className="animate-spin"/>)  
+                            :
+                            (<Trash2 className="h-5 w-5"/>)  
+                            }
+
                         </Button>
 
                         <Button variant="warning" size="icon" onClick={() => handleSaleUpdate(sale)}> 
