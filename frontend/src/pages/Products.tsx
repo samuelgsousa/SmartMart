@@ -18,12 +18,12 @@ DialogTitle,
 import {useProducts} from '../hooks/useProducts'
 import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
-import { Trash2, Pencil   } from "lucide-react";
+import { Trash2, Pencil, Loader2   } from "lucide-react";
 
 
 const Products = () => {
 
-    const {products, deleteProduct} = useProducts()
+    const {products, deleteProduct, deletingStates} = useProducts()
     const [productUpdating, setProductUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
@@ -36,6 +36,9 @@ const Products = () => {
         setProductUpdating(product)
         setDialogIsOpen(true)
     }
+
+    // Função auxiliar para verificar o estado ao deletar um produto
+    const isDeleting = (productId: number) => deletingStates.some(state => state.id === productId && state.isDeleting);
 
     return (
         <>
@@ -63,8 +66,14 @@ const Products = () => {
                         <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
                         <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
                         <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
-                            <Button  variant="destructive" size="icon" onClick={() => deleteProduct(product.id)}>
-                            <Trash2 className="h-5 w-5" />
+                            <Button variant="destructive" size="icon" onClick={() => deleteProduct(product.id)} disabled={isDeleting(product.id)}>
+                                {isDeleting(product.id) ? 
+                            ( <Loader2 className="animate-spin"/>)  
+                            :
+                            (<Trash2 className="h-5 w-5"/>)  
+                            }
+                            
+                           
                             </Button>
     
                             <Button variant="warning" size="icon" onClick={() => handleProductUpdate(product)}> 
