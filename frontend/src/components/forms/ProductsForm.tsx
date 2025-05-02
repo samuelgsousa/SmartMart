@@ -43,7 +43,7 @@ const formSchema = z.object({
 const ProductsForm = ({productUpdating, onSuccess}) => {
 
     const {categories} = useCategories()
-    const {createProduct} = useProducts()
+    const {createProduct, isCreating, updateProduct, isUpdating} = useProducts()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -60,7 +60,9 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
         console.log("Dados a serem enviados: ", data)
 
         try {
-            await createProduct(data)
+            if (productUpdating) await updateProduct({id: productUpdating.id, data})
+            else await createProduct(data)
+        
             onSuccess()
         } catch (error) {
             alert("Falha ao enviar produto!")
