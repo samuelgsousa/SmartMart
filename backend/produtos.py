@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session, relationship, joinedload
 from pydantic import BaseModel
 from typing import Optional, List
 from database import SessionLocal, Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
+import pandas as pd
 
 # --- Modelo SQLAlchemy ---
 class ProdutoDB(Base):
@@ -68,6 +69,28 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
         **novo_produto.__dict__,
         category_name=novo_produto.category.name
     )
+
+@router.post("/bulk")
+async def bulk_create_products(file: UploadFile = File(...)):
+    # Validar extensão
+    if not file.filename.endswith(".csv"):
+        raise HTTPException(400, "Apenas arquivos CSV são permitidos")
+    
+    # Ler CSV
+    try:
+        df = pd.read_csv(file.file)
+        required_columns = ["name", "price", "category_id"]
+        if not all(col in df.columns for col in required_columns):
+            raise HTTPException(400, "Colunas obrigatórias faltando")
+        
+        # Processar dados
+        products = df.to_dict(orient="records")
+        # ... lógica de criação
+        
+        return {"message": f"{len(products)} produtos criados com sucesso"}
+    
+    except Exception as e:
+        raise HTTPException(500, f"Erro no processamento: {str(e)}")
 
 @router.get("/", response_model=List[ProdutoResponse])
 def listar_produtos(db: Session = Depends(get_db), price_min: float = None):
