@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from typing import Optional, List
 from categories import CategoryDB
 from database import SessionLocal, Base
-from sqlalchemy import Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, func
 import pandas as pd
 
 # --- Modelo SQLAlchemy ---
@@ -78,82 +78,85 @@ async def bulk_create_products(file: UploadFile = File(...), db: Session = Depen
         raise HTTPException(400, "Apenas arquivos CSV são permitidos")
     
     try:
-        # Ler e validar CSV
         contents = await file.read()
         df = pd.read_csv(BytesIO(contents))
         
-        # Verificar colunas obrigatórias
         required_columns = ["name", "price", "category_id", "brand"]
         if not all(col in df.columns for col in required_columns):
             missing = [col for col in required_columns if col not in df.columns]
             raise HTTPException(400, f"Colunas faltando: {', '.join(missing)}")
 
         products_to_create = []
-# Iniciar transação
-        db.begin()
-
+        errors = []
+        
         for index, row in df.iterrows():
             try:
-                # Processar categoria (ID ou nome)
-                category_input = row['category_id']
+                raw_value = row['category_id']
                 category_id = None
-
-                # Tentar interpretar como ID numérico
-                try:
-                    category_id = int(category_input)
+                category_name = None
+                
+                # Etapa 1: Limpeza e análise do valor
+                cleaned_value = str(raw_value).strip()
+                
+                # Etapa 2: Verificação se é numérico válido
+                if cleaned_value.isdigit():
+                    # Tentar como ID numérico
+                    category_id = int(cleaned_value)
                     categoria = db.get(CategoryDB, category_id)
+                    
                     if not categoria:
-                        raise ValueError(f"Categoria com ID {category_id} não existe")
-                except ValueError:
-                    # Tratar como nome da categoria
-                    category_name = str(category_input).strip()
+                        raise ValueError(f"Categoria com ID {category_id} não encontrada")
+                else:
+                    # Tratar como nome
+                    category_name = cleaned_value
                     if not category_name:
                         raise ValueError("Nome da categoria não pode ser vazio")
-
-                    # Buscar por nome (case-insensitive)
+                    
+                    # Buscar existente (case-insensitive)
                     categoria = db.query(CategoryDB).filter(
-                        CategoryDB.name == category_name.lower()
+                        func.lower(CategoryDB.name) == category_name.lower()
                     ).first()
 
+                    # Criar nova se necessário
                     if not categoria:
-                        # Criar nova categoria
-                        categoria = CategoryDB(
-                            name=category_name
-                        )
+                        categoria = CategoryDB(name=category_name)
                         db.add(categoria)
-                        db.flush()  # Gera o ID sem commit
+                        db.flush()
 
-                    category_id = categoria.id
-
-                # Validar e criar produto
+                # Validar e armazenar produto
                 product_data = ProdutoCreate(
                     name=row['name'],
                     price=float(row['price']),
-                    category_id=category_id,
+                    category_id=categoria.id,
                     brand=row['brand'],
                     description=row.get('description')
                 )
                 products_to_create.append(product_data.model_dump())
 
             except Exception as e:
+                errors.append({
+                    "linha": index + 2,
+                    "erro": str(e),
+                    "valor_category_id": raw_value,
+                    "dados": row.to_dict()
+                })
                 db.rollback()
-                raise HTTPException(400, f"Erro na linha {index + 2}: {str(e)}")
 
-        # Inserção em massa de produtos
+        # Commit final
         if products_to_create:
             db.bulk_insert_mappings(ProdutoDB, products_to_create)
-        
-        db.commit()
+            db.commit()
 
-        return {"message": f"{len(products_to_create)} produtos criados com sucesso"}
+        return {
+            "message": f"{len(products_to_create)} produtos criados",
+            "erros": errors,
+            "total_erros": len(errors)
+        }
 
-    except HTTPException as he:
-        db.rollback()
-        raise he
     except Exception as e:
         db.rollback()
-        raise HTTPException(500, f"Erro no processamento: {str(e)}")
-
+        raise HTTPException(500, f"Erro geral: {str(e)}")
+    
 @router.get("/", response_model=List[ProdutoResponse])
 def listar_produtos(db: Session = Depends(get_db), price_min: float = None):
     
