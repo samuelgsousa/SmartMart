@@ -18,13 +18,22 @@ DialogTitle,
 import {useProducts} from '../hooks/useProducts'
 import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
+import { Trash2, Pencil   } from "lucide-react";
+
 
 const Products = () => {
 
     const {products} = useProducts()
+    const [productUpdating, setProductUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
     const handleNewProduct = () => {
+        setProductUpdating(null)
+        setDialogIsOpen(true)
+    }
+
+    const handleProductUpdate = (product) => {
+        setProductUpdating(product)
         setDialogIsOpen(true)
     }
 
@@ -53,6 +62,16 @@ const Products = () => {
                         <TableCell key={`product_price_${product.id}`}>{product.price}</TableCell>
                         <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
                         <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
+                        <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
+                            <Button  variant="destructive" size="icon" onClick={() => {}}>
+                            <Trash2 className="h-5 w-5" />
+                            </Button>
+    
+                            <Button variant="warning" size="icon" onClick={() => handleProductUpdate(product)}> 
+                            <Pencil className="h-5 w-5" />
+    
+                            </Button>
+                        </TableCell>
                     </TableRow>
 
                 ))}
@@ -65,9 +84,9 @@ const Products = () => {
 
 
         <DialogContent>
-            <DialogHeader><DialogTitle>New Product</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle>{productUpdating ? `Update product ${productUpdating.id}` : 'New Product'}</DialogTitle></DialogHeader>
 
-            <ProductsForm productUpdating={null} onSuccess={() => setDialogIsOpen(false)}/>
+            <ProductsForm productUpdating={productUpdating} onSuccess={() => setDialogIsOpen(false)}/>
 
         </DialogContent>
         </Dialog>
