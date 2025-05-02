@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient, useMutationState } from '@tanstack/react-query';
 import ProductsService from "../services/products.service"
 import {Product}  from "@/interfaces/interfaces"
+import { convertArrayToCsv } from '@/utils/csvUtils';
 
 export const useProducts = () => {
     const queryClient = useQueryClient();
@@ -45,11 +46,31 @@ export const useProducts = () => {
         })
       });
 
+      const { mutateAsync: bulkCreate } = useMutation({
+        mutationFn: async (products: any) => {
+          // Converter array para CSV 
+          const csv = convertArrayToCsv(products)
+          
+          const formData = new FormData()
+          const csvBlob = new Blob([csv], { type: 'text/csv' });
+    
+          // Adiciona o arquivo com nome específico
+          formData.append('file', csvBlob, 'products.csv');
+          
+          const response = await ProductsService.bulkCreate(formData)
+          return response
+        },
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ['products'] })
+        }
+      })
+
     return {
         // Query
         products: productsQuery.data || [],
         isLoading: productsQuery.isLoading,
         isFetching: productsQuery.isFetching,
+        bulkCreate,
         
         // Mutations
         createProduct: createMutation.mutateAsync,
@@ -67,4 +88,6 @@ export const useProducts = () => {
                updateMutation.error || 
                deleteMutation.error
       };
+
+      
 }
