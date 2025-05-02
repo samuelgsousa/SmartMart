@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "..
 
 import { useCategories } from "@/hooks/useCategories"
 import { useProducts } from "@/hooks/useProducts"
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
     name: z.string() // Primeiro verifica se é string
@@ -62,7 +63,7 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
         try {
             if (productUpdating) await updateProduct({id: productUpdating.id, data})
             else await createProduct(data)
-        
+
             onSuccess()
         } catch (error) {
             alert("Falha ao enviar produto!")
@@ -165,7 +166,10 @@ const ProductsForm = ({productUpdating, onSuccess}) => {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" disabled={isCreating || isUpdating} className="w-20">
+                { isCreating || isUpdating ? <Loader2 className="animate-spin"/> : <>Submit</>}
+                
+            </Button>
         </form>
         </Form>
     )
