@@ -67,7 +67,7 @@ const Products = () => {
                         <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
                         <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
                             <Button variant="destructive" size="icon" onClick={() => deleteProduct(product.id)} disabled={isDeleting(product.id)}>
-                                {isDeleting(product.id) ? 
+                            {isDeleting(product.id) ? 
                             ( <Loader2 className="animate-spin"/>)  
                             :
                             (<Trash2 className="h-5 w-5"/>)  
