@@ -23,7 +23,7 @@ import { Trash2, Pencil   } from "lucide-react";
 
 const Products = () => {
 
-    const {products} = useProducts()
+    const {products, deleteProduct} = useProducts()
     const [productUpdating, setProductUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
@@ -63,7 +63,7 @@ const Products = () => {
                         <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
                         <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
                         <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
-                            <Button  variant="destructive" size="icon" onClick={() => {}}>
+                            <Button  variant="destructive" size="icon" onClick={() => deleteProduct(product.id)}>
                             <Trash2 className="h-5 w-5" />
                             </Button>
     
