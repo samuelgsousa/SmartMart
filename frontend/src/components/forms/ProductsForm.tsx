@@ -17,7 +17,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "..
 import { useCategories } from "@/hooks/useCategories"
 import { useProducts } from "@/hooks/useProducts"
 
-
 const formSchema = z.object({
     name: z.string() // Primeiro verifica se é string
     .min(1, { message: "O nome não pode estar vazio" }) // Depois valida o comprimento
