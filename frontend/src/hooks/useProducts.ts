@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, useMutationState } from '@tanstack/react-query';
 import ProductsService from "../services/products.service"
 import {Product}  from "@/interfaces/interfaces"
 
@@ -31,10 +31,19 @@ export const useProducts = () => {
 
     const deleteMutation = useMutation({
     mutationFn: (id: number) => ProductsService.delete(id),
+    mutationKey: ['deleteProduct'],
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['products'] });
     }
     });
+
+    const deletingStates = useMutationState({
+        filters: { mutationKey: ['deleteProduct'] },
+        select: (mutation) => ({
+          id: mutation.state.variables as number,
+          isDeleting: mutation.state.status === 'pending'
+        })
+      });
 
     return {
         // Query
@@ -49,8 +58,8 @@ export const useProducts = () => {
         updateProduct: updateMutation.mutateAsync,
         isUpdating: updateMutation.isPending,
         
-        deleteProduct: deleteMutation.mutateAsync,
-        isDeleting: deleteMutation.isPending,
+        deleteProduct: deleteMutation.mutate,
+        deletingStates,
         
         // Erros
         error: productsQuery.error || 
