@@ -19,6 +19,8 @@ import {useProducts} from '../hooks/useProducts'
 import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
 import { Trash2, Pencil, Loader2   } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+
 
 
 const Products = () => {
@@ -40,11 +42,10 @@ const Products = () => {
     // Função auxiliar para verificar o estado ao deletar um produto
     const isDeleting = (productId: number) => deletingStates.some(state => state.id === productId && state.isDeleting);
 
-    return (
-        <>
-    
-            
-        <Table>
+    const TabProducts = () => {
+        return (
+            <>
+            <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead key={"product_id_head"}>Product Id</TableHead>
@@ -99,6 +100,27 @@ const Products = () => {
 
         </DialogContent>
         </Dialog>
+            </>
+        )
+}
+
+
+    return (
+        <>
+
+        
+        <Tabs defaultValue="account" >
+        <TabsList>
+            <TabsTrigger value="account">Products</TabsTrigger>
+            <TabsTrigger value="password">Categories</TabsTrigger>
+        </TabsList>
+        <TabsContent value="account"> <TabProducts/> </TabsContent>
+        
+        <TabsContent value="password">Categorias ficarão aqui</TabsContent>
+        </Tabs>
+
+            
+
 
         </>
     )
