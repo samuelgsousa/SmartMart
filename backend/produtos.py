@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session, relationship, joinedload
 from pydantic import BaseModel
 from typing import Optional, List
+from categories import CategoryDB
 from database import SessionLocal, Base
 from sqlalchemy import Column, ForeignKey, Integer, String, Float
 import pandas as pd
@@ -87,29 +88,67 @@ async def bulk_create_products(file: UploadFile = File(...), db: Session = Depen
             missing = [col for col in required_columns if col not in df.columns]
             raise HTTPException(400, f"Colunas faltando: {', '.join(missing)}")
 
-        # Converter e validar dados
         products_to_create = []
-        for _, row in df.iterrows():
+# Iniciar transação
+        db.begin()
+
+        for index, row in df.iterrows():
             try:
-                # Validar cada linha com o schema Pydantic
+                # Processar categoria (ID ou nome)
+                category_input = row['category_id']
+                category_id = None
+
+                # Tentar interpretar como ID numérico
+                try:
+                    category_id = int(category_input)
+                    categoria = db.get(CategoryDB, category_id)
+                    if not categoria:
+                        raise ValueError(f"Categoria com ID {category_id} não existe")
+                except ValueError:
+                    # Tratar como nome da categoria
+                    category_name = str(category_input).strip()
+                    if not category_name:
+                        raise ValueError("Nome da categoria não pode ser vazio")
+
+                    # Buscar por nome (case-insensitive)
+                    categoria = db.query(CategoryDB).filter(
+                        CategoryDB.name == category_name.lower()
+                    ).first()
+
+                    if not categoria:
+                        # Criar nova categoria
+                        categoria = CategoryDB(
+                            name=category_name
+                        )
+                        db.add(categoria)
+                        db.flush()  # Gera o ID sem commit
+
+                    category_id = categoria.id
+
+                # Validar e criar produto
                 product_data = ProdutoCreate(
                     name=row['name'],
                     price=float(row['price']),
-                    category_id=int(row['category_id']),
+                    category_id=category_id,
                     brand=row['brand'],
                     description=row.get('description')
                 )
                 products_to_create.append(product_data.model_dump())
-            except ValueError as e:
-                raise HTTPException(400, f"Erro na linha {_ + 2}: {str(e)}")
+
+            except Exception as e:
+                db.rollback()
+                raise HTTPException(400, f"Erro na linha {index + 2}: {str(e)}")
+
+        # Inserção em massa de produtos
+        if products_to_create:
+            db.bulk_insert_mappings(ProdutoDB, products_to_create)
         
-        # Inserção em massa
-        db.bulk_insert_mappings(ProdutoDB, products_to_create)
         db.commit()
 
         return {"message": f"{len(products_to_create)} produtos criados com sucesso"}
 
     except HTTPException as he:
+        db.rollback()
         raise he
     except Exception as e:
         db.rollback()
