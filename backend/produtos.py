@@ -1,3 +1,4 @@
+from io import BytesIO
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session, relationship, joinedload
 from pydantic import BaseModel
@@ -71,25 +72,47 @@ def criar_produto(produto: ProdutoCreate, db: Session = Depends(get_db)):
     )
 
 @router.post("/bulk")
-async def bulk_create_products(file: UploadFile = File(...)):
-    # Validar extensão
+async def bulk_create_products(file: UploadFile = File(...), db: Session = Depends(get_db)):
     if not file.filename.endswith(".csv"):
         raise HTTPException(400, "Apenas arquivos CSV são permitidos")
     
-    # Ler CSV
     try:
-        df = pd.read_csv(file.file)
-        required_columns = ["name", "price", "category_id"]
+        # Ler e validar CSV
+        contents = await file.read()
+        df = pd.read_csv(BytesIO(contents))
+        
+        # Verificar colunas obrigatórias
+        required_columns = ["name", "price", "category_id", "brand"]
         if not all(col in df.columns for col in required_columns):
-            raise HTTPException(400, "Colunas obrigatórias faltando")
+            missing = [col for col in required_columns if col not in df.columns]
+            raise HTTPException(400, f"Colunas faltando: {', '.join(missing)}")
+
+        # Converter e validar dados
+        products_to_create = []
+        for _, row in df.iterrows():
+            try:
+                # Validar cada linha com o schema Pydantic
+                product_data = ProdutoCreate(
+                    name=row['name'],
+                    price=float(row['price']),
+                    category_id=int(row['category_id']),
+                    brand=row['brand'],
+                    description=row.get('description')
+                )
+                products_to_create.append(product_data.model_dump())
+            except ValueError as e:
+                raise HTTPException(400, f"Erro na linha {_ + 2}: {str(e)}")
         
-        # Processar dados
-        products = df.to_dict(orient="records")
-        # ... lógica de criação
-        
-        return {"message": f"{len(products)} produtos criados com sucesso"}
-    
+        # Inserção em massa
+        db.bulk_insert_mappings(ProdutoDB, products_to_create)
+        db.commit()
+
+        return {"message": f"{len(products_to_create)} produtos criados com sucesso"}
+
+    except HTTPException as he:
+        raise he
     except Exception as e:
+        db.rollback()
         raise HTTPException(500, f"Erro no processamento: {str(e)}")
 
 @router.get("/", response_model=List[ProdutoResponse])
