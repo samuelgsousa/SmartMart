@@ -158,7 +158,7 @@ const TabCategories = () => {
             }
 
         } catch (error) {
-            
+            console.error('Erro ao adicionar categoria:', error);
         }
     }
 
