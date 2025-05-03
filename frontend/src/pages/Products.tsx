@@ -114,7 +114,7 @@ const TabProducts = () => {
 
 const TabCategories = () => {
 
-    const {categories, updateCategory, createCategory} = useCategories()
+    const {categories, updateCategory, createCategory, deleteCategory} = useCategories()
 
     const [categoryUpdating, setCategoryUpdating] = useState(null)
     const [editedName, setEditedName] = useState('')
@@ -162,6 +162,11 @@ const TabCategories = () => {
         }
     }
 
+    const submitDeleteCategory = async (category_id) => {
+
+        await deleteCategory(category_id)
+    }
+
 
     return (
         <>
@@ -200,7 +205,7 @@ const TabCategories = () => {
                             ) : (
                                 <>
                                 
-                            <Button variant="destructive" size="icon" onClick={() => {}}>
+                            <Button variant="destructive" size="icon" onClick={() => submitDeleteCategory(category.id)}>
 
                                 <Trash2 className="h-5 w-5"/>
 
