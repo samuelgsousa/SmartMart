@@ -122,7 +122,7 @@ const TabCategories = () => {
 
     const [categoryCreating, setCategoryCreating] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState('')
-
+    const [warningDialog, setWarningDialog] = useState(false)
 
 
     const handleCategoryUpdate = async (category) => {
@@ -184,6 +184,16 @@ const TabCategories = () => {
 
     return (
         <>
+        <Dialog open={true} onOpenChange={setWarningDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle> 
+                            Aviso! Essa categoria possui [x] produtos vinculados a ela! Como deseja prosseguir?
+                        </DialogTitle>
+                    </DialogHeader>
+
+                </DialogContent>
+        </Dialog>
         <Table>
             <TableHeader>
                 <TableRow>
