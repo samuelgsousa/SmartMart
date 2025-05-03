@@ -21,6 +21,11 @@ class CategoryResponse(CategoryCreate):
     class Config:
         from_attributes = True
 
+class ConflictResponse(BaseModel):
+    detail: str
+    required_action: str
+    related_products_count: int
+
 # --- Rotas ---
 
 router = APIRouter(prefix="/categories", tags=["categories"])
@@ -67,7 +72,11 @@ async def atualizar_categoria(
     
     return db_categoria
 
-@router.delete("/{category_id}")
+@router.delete("/{category_id}", responses={
+    200: {"description": "Categoria excluída com sucesso"},
+    404: {"description": "Categoria não encontrada"},
+    409: {"description": "Conflito com produtos existentes", "model": ConflictResponse}
+})
 async def excluir_categoria(category_id: int):
     db = SessionLocal()
 
@@ -81,9 +90,29 @@ async def excluir_categoria(category_id: int):
             detail=f"Categoria com ID {category_id} não encontrada"
         )
     
-        # Remove o produto
-    db.delete(db_categoria)
-    db.commit()
+     # Obter todos os produtos vinculados
+    produtos_vinculados = db_categoria.produto
+    
+    if produtos_vinculados:
+        # Se houver produtos vinculados, retornar informações detalhadas
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail={
+                "message": "Existem produtos vinculados a esta categoria",
+                "products": [
+                    {
+                        "id": produto.id,
+                        "name": produto.name,
+                        "category_id": produto.category_id
+                    } for produto in produtos_vinculados
+                ],
+                "products_count": len(produtos_vinculados)
+            }
+        )
+
+    # Remove a categoria
+   # db.delete(db_categoria)
+   # db.commit()
     db.close()
     
     return {"mensagem": f"Cateoria com ID {category_id} excluída com sucesso"}
