@@ -26,9 +26,9 @@ export function CsvUploader() {
 
   useEffect(() => {
 
-    console.log("Teste da variável: ", bulkErrors)
+    console.log("preview Data: ", previewData)
     
-    }, [bulkErrors])
+    }, [previewData])
 
   const onSubmit = async () => {
       // Enviar para API
@@ -37,8 +37,12 @@ export function CsvUploader() {
       try {
         const formData = new FormData()
         formData.append('file', csvFile)
+
+        setBulkErrors([])
         
         const resposta = await bulkCreate(formData)
+
+        if(resposta) setPreviewData([])
         
       } catch (error) {
 
@@ -84,6 +88,7 @@ export function CsvUploader() {
 
       // Mostrar preview
       setPreviewData(results.slice(0, 5))
+      setBulkErrors([])
 
       
     } catch (error) {
@@ -135,42 +140,47 @@ export function CsvUploader() {
       </div>
 
       {previewData?.length > 0 && (
-        <div className="border rounded-lg p-4">
-          <h3 className="font-semibold mb-2">Preview (primeiras 5 linhas):</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr>
-                  {Object.keys(previewData[0]).map((header) => (
-                    <th key={header} className="text-left p-2 border-b">
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {previewData.map((row, index) => (
-                  <tr key={index}>
-                    {Object.values(row).map((value: any, i) => (
-                      <td key={i} className="p-2 border-b">
-                        {value}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <>
+        <Table>
+        <TableHeader>
+            <TableRow>
+              <TableHead key={"csv_line_head"}>Line</TableHead>
+              <TableHead key={"product_name_head"}>Name</TableHead>
+              <TableHead key={"description_head"}>Description</TableHead>
+              <TableHead key={"price_head"}>Price</TableHead>
+              <TableHead key={"category_head"}>Category_id</TableHead>
+              <TableHead key={"brand_head"}>Brand</TableHead>
+            </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {previewData?.map((produto, index) => (
+            <TableRow key={index + 2}>
+              <TableCell>{index + 2}</TableCell>
+              <TableCell>{produto.name}</TableCell>
+              <TableCell>{produto.description}</TableCell>
+              <TableCell>{produto.price}</TableCell>
+              <TableCell>{produto.category_id}</TableCell>
+              <TableCell>{produto.brand}</TableCell>
+            </TableRow>
+          ))}
+
+        </TableBody>
+        </Table>
+
           <Button onClick={() => onSubmit()}>Enviar</Button>
           <Button variant="destructive" onClick={() => {
             setCsvFile(null)
             setPreviewData(null)
             }}>Limpar</Button>
-        </div>
+   
+        </>
+
       )}
         
        {bulkErrors?.lineErros?.length > 0 && (
         
+               <>
                     <Table>
                     <TableHeader>
                         <TableRow>
@@ -198,6 +208,10 @@ export function CsvUploader() {
                       ))}
                     </TableBody>
                 </Table>
+
+                <Button variant="destructive" onClick={() => setBulkErrors([])}>Ignorar</Button>
+               
+               </>
       )} 
 
     </div>
