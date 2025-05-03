@@ -9,6 +9,14 @@ export function CsvUploader() {
   const [isProcessing, setIsProcessing] = useState(false)
   const { bulkCreate } = useProducts()
 
+  const [csvFile, setCsvFile] = useState(null)
+
+  const onSubmit = async () => {
+      // Enviar para API
+      const resposta = await bulkCreate(csvFile)
+      console.log(resposta)
+  }
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
     if (!file) return
@@ -32,10 +40,8 @@ export function CsvUploader() {
 
       // Mostrar preview
       setPreviewData(results.slice(0, 5))
-      
-      // Enviar para API
-     const resposta = await bulkCreate(results)
-     console.log(resposta)
+      setCsvFile(results)
+
       
     } catch (error) {
       console.error('Erro no processamento:', error)
@@ -85,7 +91,7 @@ export function CsvUploader() {
         )}
       </div>
 
-      {previewData.length > 0 && (
+      {previewData?.length > 0 && (
         <div className="border rounded-lg p-4">
           <h3 className="font-semibold mb-2">Preview (primeiras 5 linhas):</h3>
           <div className="overflow-x-auto">
@@ -112,6 +118,11 @@ export function CsvUploader() {
               </tbody>
             </table>
           </div>
+          <Button onClick={() => onSubmit()}>Enviar</Button>
+          <Button variant="destructive" onClick={() => {
+            setCsvFile(null)
+            setPreviewData(null)
+            }}>Limpar</Button>
         </div>
       )}
     </div>
