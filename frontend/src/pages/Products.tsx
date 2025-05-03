@@ -23,6 +23,7 @@ import { Trash2, Pencil, Loader2, X, Check   } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CsvUploader } from '@/components/CsvUploader';
 import { Input } from '@/components/ui/input';
+import { DeleteCategoryError } from '@/utils/Errors';
 
 
 const Products = () => {
@@ -122,6 +123,8 @@ const TabCategories = () => {
     const [categoryCreating, setCategoryCreating] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState('')
 
+
+
     const handleCategoryUpdate = async (category) => {
         
         setCategoryUpdating(category)
@@ -164,7 +167,18 @@ const TabCategories = () => {
 
     const submitDeleteCategory = async (category_id) => {
 
-        await deleteCategory(category_id)
+        try {
+            await deleteCategory(category_id)
+
+        } catch (error) {
+            if (error instanceof DeleteCategoryError) {
+                console.log("Conta de produtos: ", error.status.detail.products_count)
+            }
+       
+            
+
+        }
+        
     }
 
 
