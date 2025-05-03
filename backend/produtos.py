@@ -149,7 +149,7 @@ async def bulk_create_products(file: UploadFile = File(...), db: Session = Depen
 
         return {
             "message": f"{len(products_to_create)} produtos criados",
-            "erros": errors,
+            "lineErros": errors,
             "total_erros": len(errors)
         }
 
