@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient, useMutationState } from '@tanstack/react-query';
 import ProductsService from "../services/products.service"
 import {Product}  from "@/interfaces/interfaces"
-import { convertArrayToCsv, CsvLineError } from '@/utils/csvUtils';
+import { CsvLineError } from '@/utils/csvUtils';
 
 export const useProducts = () => {
     const queryClient = useQueryClient();
