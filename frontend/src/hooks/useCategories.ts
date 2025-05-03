@@ -28,5 +28,7 @@ export const useCategories = () => {
         isFetching: categoriesQuery.isFetching,
 
         // Mutations
+        createCategory: createMutation.mutateAsync,
+        isCreating: createMutation.isPending
 };
 }
