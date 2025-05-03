@@ -1,21 +1,67 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Button } from '@/components/ui/button'
 import { parse } from 'papaparse'
 import { useProducts } from '@/hooks/useProducts'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { CsvLineError } from '@/utils/csvUtils'
+
+type CsvError = {
+  linha: number;
+  erro: string;
+  valor_category_id: string | number;
+  dados: Record<string, any>;
+}
 
 export function CsvUploader() {
   const [previewData, setPreviewData] = useState<any[]>([])
+  const [errorsOnSend, setErrorsOnSend] = useState<CsvError[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
-  const { bulkCreate } = useProducts()
 
-  const [csvFile, setCsvFile] = useState(null)
+  const[bulkErrors, setBulkErrors] = useState([])
+
+  const { bulkCreate} = useProducts()
+
+  const [csvFile, setCsvFile] = useState<File | null>(null)
+
+  useEffect(() => {
+
+    console.log("Teste da variável: ", bulkErrors)
+    
+    }, [bulkErrors])
 
   const onSubmit = async () => {
       // Enviar para API
-      const resposta = await bulkCreate(csvFile)
-      console.log(resposta)
+      if (!csvFile) return
+
+      try {
+        const formData = new FormData()
+        formData.append('file', csvFile)
+        
+        const resposta = await bulkCreate(formData)
+        
+      } catch (error) {
+        console.error('Erro no envio:', error)
+        if (error instanceof CsvLineError) { 
+          console.error(error.message);  
+          console.error(error.lineErros);     
+          console.error(error.total_erros);
+          
+          setBulkErrors(error.lineErros)
+        }
+      }
   }
+
+ 
+  
+
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0]
@@ -24,6 +70,7 @@ export function CsvUploader() {
     setIsProcessing(true)
     
     try {
+      setCsvFile(file)
       // Ler e parsear o CSV
       const results = await new Promise<any>((resolve, reject) => {
         parse(file, {
@@ -40,7 +87,6 @@ export function CsvUploader() {
 
       // Mostrar preview
       setPreviewData(results.slice(0, 5))
-      setCsvFile(results)
 
       
     } catch (error) {
@@ -125,6 +171,36 @@ export function CsvUploader() {
             }}>Limpar</Button>
         </div>
       )}
+        
+       {bulkErrors?.lineErros?.length > 0 && (
+        
+                    <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead key={"product_id_head"}>Product Id</TableHead>
+                            <TableHead key={"product_name_head"}>Product Name</TableHead>
+                            <TableHead key={"description_head"}>Description</TableHead>
+                            <TableHead key={"price_head"}>Price</TableHead>
+                            <TableHead key={"category_head"}>Category</TableHead>
+                            <TableHead key={"brand_head"}>Brand</TableHead>
+                            <TableHead key={"brand_head"}>Error</TableHead>
+                        </TableRow>
+                    </TableHeader>
+
+                   <TableBody>
+                   {bulkErrors?.lineErros?.map((erro, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{erro.linha}</TableCell>
+                          <TableCell className="text-red-600">{erro.erro}</TableCell>
+                          <TableCell>{erro.valor_category_id}</TableCell>
+                          <TableCell>{erro.dados.name}</TableCell>
+                          <TableCell>{erro.dados.price}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                </Table>
+      )} 
+
     </div>
   )
 }
