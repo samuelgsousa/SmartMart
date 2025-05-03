@@ -13,16 +13,9 @@ import {
 } from "@/components/ui/table";
 import { CsvLineError } from '@/utils/csvUtils'
 
-type CsvError = {
-  linha: number;
-  erro: string;
-  valor_category_id: string | number;
-  dados: Record<string, any>;
-}
 
 export function CsvUploader() {
   const [previewData, setPreviewData] = useState<any[]>([])
-  const [errorsOnSend, setErrorsOnSend] = useState<CsvError[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
 
   const[bulkErrors, setBulkErrors] = useState([])
@@ -48,13 +41,17 @@ export function CsvUploader() {
         const resposta = await bulkCreate(formData)
         
       } catch (error) {
+
         console.error('Erro no envio:', error)
+
         if (error instanceof CsvLineError) { 
           console.error(error.message);  
           console.error(error.lineErros);     
           console.error(error.total_erros);
           
           setBulkErrors(error.lineErros)
+          setPreviewData([])
+          setCsvFile(null)
         }
       }
   }
@@ -177,13 +174,13 @@ export function CsvUploader() {
                     <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead key={"product_id_head"}>Product Id</TableHead>
+                            <TableHead key={"csv_line_head"}>Line</TableHead>
                             <TableHead key={"product_name_head"}>Product Name</TableHead>
-                            <TableHead key={"description_head"}>Description</TableHead>
-                            <TableHead key={"price_head"}>Price</TableHead>
+                            <TableHead key={"error_head"}>Error</TableHead>
                             <TableHead key={"category_head"}>Category</TableHead>
+                            <TableHead key={"price_head"}>Price</TableHead>
                             <TableHead key={"brand_head"}>Brand</TableHead>
-                            <TableHead key={"brand_head"}>Error</TableHead>
+                            <TableHead key={"description_head"}>Description</TableHead>
                         </TableRow>
                     </TableHeader>
 
@@ -191,10 +188,12 @@ export function CsvUploader() {
                    {bulkErrors?.lineErros?.map((erro, index) => (
                         <TableRow key={index}>
                           <TableCell>{erro.linha}</TableCell>
+                          <TableCell>{erro.dados.name}</TableCell>
                           <TableCell className="text-red-600">{erro.erro}</TableCell>
                           <TableCell>{erro.valor_category_id}</TableCell>
-                          <TableCell>{erro.dados.name}</TableCell>
                           <TableCell>{erro.dados.price}</TableCell>
+                          <TableCell>{erro.dados.brand}</TableCell>
+                          <TableCell>{erro.dados.description}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
