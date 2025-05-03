@@ -17,5 +17,6 @@ NOTA: CRIAR UM SCRIPT PARA CONFIGURAÇÃO DO BANCO DE DADOS
 
 NOTA: Adicionar validação ao adicionar categorias, para evitar duplicações
 
+NOTA: Adicionar botão para baixar linhas que estão com erro, para permitir edição fácil
 
 Simular delay: await new Promise(resolve => setTimeout(resolve, 5000)); // 5 segundos
