@@ -119,7 +119,13 @@ const TabCategories = () => {
     const [categoryUpdating, setCategoryUpdating] = useState(null)
     const [editedName, setEditedName] = useState('');
 
-    const handleCategoryUpdate = async () => {
+    const handleCategoryUpdate = async (category) => {
+        
+        setCategoryUpdating(category)
+        setEditedName(category.name);
+    }
+
+    const submitCategory = async () =>{
         try {
             if (!categoryUpdating) return;
             
@@ -135,7 +141,6 @@ const TabCategories = () => {
           } catch (error) {
             console.error('Erro ao atualizar categoria:', error);
           }
-       
     }
 
 
@@ -168,7 +173,7 @@ const TabCategories = () => {
                                     <X className="h-6 w-6"/>
                                 </Button>
 
-                                <Button variant="success" size="icon" onClick={() => handleCategoryUpdate()}>
+                                <Button variant="success" size="icon" onClick={() => submitCategory()}>
                                     <Check />
                                 </Button>
 
@@ -189,10 +194,7 @@ const TabCategories = () => {
 
                             </Button>
 
-                            <Button variant="warning" size="icon" onClick={() => {
-                                setCategoryUpdating(category)
-                                setEditedName(category.name);
-                                }}> 
+                            <Button variant="warning" size="icon" onClick={() => handleCategoryUpdate(category)}> 
                                 <Pencil className="h-5 w-5" />
                             </Button>
                                 </>
