@@ -16,6 +16,7 @@ DialogTitle,
 } from "@/components/ui/dialog"
 
 import {useProducts} from '../hooks/useProducts'
+import { useCategories } from '@/hooks/useCategories';
 import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
 import { Trash2, Pencil, Loader2   } from "lucide-react";
@@ -26,6 +27,10 @@ import { CsvUploader } from '@/components/CsvUploader';
 const Products = () => {
 
     const {products, deleteProduct, deletingStates} = useProducts()
+    const {categories, createCategory} = useCategories()
+
+
+
     const [productUpdating, setProductUpdating] = useState(null)
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
 
@@ -105,6 +110,55 @@ const Products = () => {
 }
 
 
+    const TabCategories = () => {
+        return (
+            <>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead key={"category_id_head"}>Id</TableHead>
+                        <TableHead key={"category_name_head"}>Category Name</TableHead>
+                        <TableHead key={"category_action_head"}>Action</TableHead>
+                    </TableRow>
+                </TableHeader>
+
+                <TableBody>
+                    {categories.map(category => (
+                        <TableRow key={`category_row_${category.id}`}>
+
+                            <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell>
+
+                            <TableCell key={`category_name_${category.id}`}>{category.name}</TableCell>
+
+                            <TableCell key={`category_action_${category.id}`}>
+
+                                <Button variant="destructive" size="icon" onClick={() => {}}>
+
+                                <Trash2 className="h-5 w-5"/>
+
+                                {/* {isDeleting(product.id) ? 
+                                ( <Loader2 className="animate-spin"/>)  
+                                :
+                                (<Trash2 className="h-5 w-5"/>)  
+                                } */}
+                                
+                                
+                                </Button>
+                            </TableCell>
+
+                        </TableRow>
+                    ))}
+
+
+                </TableBody>
+
+
+            </Table>
+            </>
+        )
+    }
+
+
     return (
         <>
 
@@ -117,7 +171,7 @@ const Products = () => {
         </TabsList>
         <TabsContent value="products_tab"> <TabProducts/> </TabsContent>
         
-        <TabsContent value="categories">Categorias ficarão aqui</TabsContent>
+        <TabsContent value="categories"><TabCategories/></TabsContent>
         <TabsContent value="csv_uploader"> <CsvUploader/> </TabsContent>
         </Tabs>
 
