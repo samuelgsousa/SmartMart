@@ -30,6 +30,14 @@ export const useCategories = () => {
     }
     });
 
+    const deleteMutation = useMutation({
+    mutationFn: (id: number) => CategoriesService.delete(id),
+    mutationKey: ['deleteCategory'],
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['categories'] });
+    }
+    });
+
     return {
         // Query
         categories: categoriesQuery.data || [],
@@ -41,6 +49,8 @@ export const useCategories = () => {
         isCreating: createMutation.isPending,
 
         updateCategory: updateMutation.mutateAsync,
-        isUpdating: updateMutation.isPending
+        isUpdating: updateMutation.isPending,
+
+        deleteCategory: deleteMutation.mutateAsync
 };
 }
