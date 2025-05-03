@@ -19,21 +19,24 @@ import {useProducts} from '../hooks/useProducts'
 import { useCategories } from '@/hooks/useCategories';
 import { Button } from '@/components/ui/button';
 import ProductsForm from '@/components/forms/ProductsForm';
-import { Trash2, Pencil, Loader2   } from "lucide-react";
+import { Trash2, Pencil, Loader2, X, Check   } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CsvUploader } from '@/components/CsvUploader';
+import { Input } from '@/components/ui/input';
 
 
 const Products = () => {
 
     const {products, deleteProduct, deletingStates} = useProducts()
-    const {categories, createCategory} = useCategories()
+    
 
 
 
-    const [productUpdating, setProductUpdating] = useState(null)
+const TabProducts = () => {
+    
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
-
+    const [productUpdating, setProductUpdating] = useState(null)
+    
     const handleNewProduct = () => {
         setProductUpdating(null)
         setDialogIsOpen(true)
@@ -47,7 +50,6 @@ const Products = () => {
     // Função auxiliar para verificar o estado ao deletar um produto
     const isDeleting = (productId: number) => deletingStates.some(state => state.id === productId && state.isDeleting);
 
-    const TabProducts = () => {
         return (
             <>
             <Table>
@@ -83,9 +85,9 @@ const Products = () => {
                             </Button>
     
                             <Button variant="warning" size="icon" onClick={() => handleProductUpdate(product)}> 
-                            <Pencil className="h-5 w-5" />
-    
+                                <Pencil className="h-5 w-5" />
                             </Button>
+
                         </TableCell>
                     </TableRow>
 
@@ -110,53 +112,108 @@ const Products = () => {
 }
 
 
-    const TabCategories = () => {
-        return (
-            <>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead key={"category_id_head"}>Id</TableHead>
-                        <TableHead key={"category_name_head"}>Category Name</TableHead>
-                        <TableHead key={"category_action_head"}>Action</TableHead>
-                    </TableRow>
-                </TableHeader>
+const TabCategories = () => {
 
-                <TableBody>
-                    {categories.map(category => (
-                        <TableRow key={`category_row_${category.id}`}>
+    const {categories, updateCategory} = useCategories()
 
-                            <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell>
+    const [categoryUpdating, setCategoryUpdating] = useState(null)
+    const [editedName, setEditedName] = useState('');
 
-                            <TableCell key={`category_name_${category.id}`}>{category.name}</TableCell>
-
-                            <TableCell key={`category_action_${category.id}`}>
-
-                                <Button variant="destructive" size="icon" onClick={() => {}}>
-
-                                <Trash2 className="h-5 w-5"/>
-
-                                {/* {isDeleting(product.id) ? 
-                                ( <Loader2 className="animate-spin"/>)  
-                                :
-                                (<Trash2 className="h-5 w-5"/>)  
-                                } */}
-                                
-                                
-                                </Button>
-                            </TableCell>
-
-                        </TableRow>
-                    ))}
-
-
-                </TableBody>
-
-
-            </Table>
-            </>
-        )
+    const handleCategoryUpdate = async () => {
+        try {
+            if (!categoryUpdating) return;
+            
+            const response = await updateCategory({
+              id: categoryUpdating.id,
+              data: { name: editedName } 
+            });
+        
+            if (response) {
+              setCategoryUpdating(null);
+              setEditedName(''); // Limpa o estado
+            }
+          } catch (error) {
+            console.error('Erro ao atualizar categoria:', error);
+          }
+       
     }
+
+
+    return (
+        <>
+        <Table>
+            <TableHeader>
+                <TableRow>
+                    <TableHead key={"category_id_head"}>Id</TableHead>
+                    <TableHead key={"category_name_head"}>Category Name</TableHead>
+                    <TableHead key={"category_action_head"}>Action</TableHead>
+                </TableRow>
+            </TableHeader>
+
+            <TableBody>
+                {categories.map(category => (
+                    <TableRow key={`category_row_${category.id}`}>
+
+                        <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell> 
+
+                        <TableCell key={`category_name_${category.id}`}>
+                            {categoryUpdating?.id == category.id ? (<Input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)}/>) : category.name} 
+                        </TableCell>
+
+                        <TableCell key={`category_action_${category.id}`}>
+
+                            {categoryUpdating?.id == category.id ? (
+                               <>
+                                <Button variant="destructive" size="icon" onClick={() => setCategoryUpdating(null)}>
+                                    <X className="h-6 w-6"/>
+                                </Button>
+
+                                <Button variant="success" size="icon" onClick={() => handleCategoryUpdate()}>
+                                    <Check />
+                                </Button>
+
+                               </>
+                            ) : (
+                                <>
+                                
+                            <Button variant="destructive" size="icon" onClick={() => {}}>
+
+                            <Trash2 className="h-5 w-5"/>
+
+                            {/* {isDeleting(product.id) ? 
+                            ( <Loader2 className="animate-spin"/>)  
+                            :
+                            (<Trash2 className="h-5 w-5"/>)  
+                            } */}
+
+
+                            </Button>
+
+                            <Button variant="warning" size="icon" onClick={() => {
+                                setCategoryUpdating(category)
+                                setEditedName(category.name);
+                                }}> 
+                                <Pencil className="h-5 w-5" />
+                            </Button>
+                                </>
+                            )
+                        
+                        }
+
+
+                        </TableCell>
+
+                    </TableRow>
+                ))}
+
+
+            </TableBody>
+
+
+        </Table>
+        </>
+    )
+}
 
 
     return (
