@@ -21,7 +21,6 @@ const ProductsService = {
     },
     bulkCreate: async (formData) =>{
 
-        
         const response = await httpClient.post('/produtos/bulk', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
