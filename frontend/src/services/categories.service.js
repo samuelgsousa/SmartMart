@@ -27,6 +27,15 @@ const CategoriesService = {
             console.error(`Erro ao atualizar categoria ${category_id}`, error);
             throw new Error(error)
         }
+    },
+    delete: async (category_id) => {
+        try {
+            const response = await httpClient.delete(`/categories/${category_id}`)
+            return response
+        } catch (error) {
+            console.error('Erro ao deletar categoria!', error);
+            throw new Error(error)
+        }
     }
 }
 
