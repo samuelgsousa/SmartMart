@@ -88,8 +88,6 @@ const Products = () => {
             </TableBody>
         </Table>
 
-        <CsvUploader/>
-
         <Button variant="success" onClick={() => handleNewProduct()}>New Product</Button>
 
         <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
@@ -114,12 +112,16 @@ const Products = () => {
         <Tabs defaultValue="products_tab" >
         <TabsList>
             <TabsTrigger value="products_tab">Products</TabsTrigger>
-            <TabsTrigger value="password">Categories</TabsTrigger>
+            <TabsTrigger value="categories">Categories</TabsTrigger>
+            <TabsTrigger value="csv_uploader">CSV Uploader</TabsTrigger>
         </TabsList>
         <TabsContent value="products_tab"> <TabProducts/> </TabsContent>
         
-        <TabsContent value="password">Categorias ficarão aqui</TabsContent>
+        <TabsContent value="categories">Categorias ficarão aqui</TabsContent>
+        <TabsContent value="csv_uploader"> <CsvUploader/> </TabsContent>
         </Tabs>
+
+       
 
             
 
