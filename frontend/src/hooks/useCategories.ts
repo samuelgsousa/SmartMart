@@ -18,8 +18,17 @@ export const useCategories = () => {
         mutationFn: CategoriesService.create,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['categories'] });
+            queryClient.invalidateQueries({ queryKey: ['sales'] });
         }
         });
+
+    const updateMutation = useMutation({
+    mutationFn: (params: { id: number; data: any }) => 
+        CategoriesService.update(params.id, params.data),
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['categories'] });
+    }
+    });
 
     return {
         // Query
@@ -29,6 +38,9 @@ export const useCategories = () => {
 
         // Mutations
         createCategory: createMutation.mutateAsync,
-        isCreating: createMutation.isPending
+        isCreating: createMutation.isPending,
+
+        updateCategory: updateMutation.mutateAsync,
+        isUpdating: updateMutation.isPending
 };
 }
