@@ -114,10 +114,13 @@ const TabProducts = () => {
 
 const TabCategories = () => {
 
-    const {categories, updateCategory} = useCategories()
+    const {categories, updateCategory, createCategory} = useCategories()
 
     const [categoryUpdating, setCategoryUpdating] = useState(null)
-    const [editedName, setEditedName] = useState('');
+    const [editedName, setEditedName] = useState('')
+
+    const [categoryCreating, setCategoryCreating] = useState(false)
+    const [newCategoryName, setNewCategoryName] = useState('')
 
     const handleCategoryUpdate = async (category) => {
         
@@ -125,7 +128,7 @@ const TabCategories = () => {
         setEditedName(category.name);
     }
 
-    const submitCategory = async () =>{
+    const submitEditingCategory = async () =>{
         try {
             if (!categoryUpdating) return;
             
@@ -141,6 +144,22 @@ const TabCategories = () => {
           } catch (error) {
             console.error('Erro ao atualizar categoria:', error);
           }
+    }
+
+    const submitNewCategory = async () => {
+        try {
+            if (!categoryCreating) return;
+
+            const response = await createCategory({name: newCategoryName});
+
+            if (response) {
+                setCategoryCreating(false)
+                setNewCategoryName('')
+            }
+
+        } catch (error) {
+            
+        }
     }
 
 
@@ -173,7 +192,7 @@ const TabCategories = () => {
                                     <X className="h-6 w-6"/>
                                 </Button>
 
-                                <Button variant="success" size="icon" onClick={() => submitCategory()}>
+                                <Button variant="success" size="icon" onClick={() => submitEditingCategory()}>
                                     <Check />
                                 </Button>
 
@@ -183,13 +202,13 @@ const TabCategories = () => {
                                 
                             <Button variant="destructive" size="icon" onClick={() => {}}>
 
-                            <Trash2 className="h-5 w-5"/>
+                                <Trash2 className="h-5 w-5"/>
 
-                            {/* {isDeleting(product.id) ? 
-                            ( <Loader2 className="animate-spin"/>)  
-                            :
-                            (<Trash2 className="h-5 w-5"/>)  
-                            } */}
+                                {/* {isDeleting(product.id) ? 
+                                ( <Loader2 className="animate-spin"/>)  
+                                :
+                                (<Trash2 className="h-5 w-5"/>)  
+                                } */}
 
 
                             </Button>
@@ -208,11 +227,35 @@ const TabCategories = () => {
                     </TableRow>
                 ))}
 
+            {categoryCreating && (
+                <TableRow key={`new_category_row`}>
+                    <TableCell key={`new_category_id`}>New</TableCell> 
+    
+                    <TableCell key={`new_category_name`}>
+                        <Input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}/>
+                    </TableCell> 
+    
+                    <TableCell key={`new_category_actions`}>
+    
+                        <Button variant="destructive" size="icon" onClick={() => setCategoryCreating(false)}>
+                            <X className="h-6 w-6"/>
+                        </Button>
+
+                        <Button variant="success" size="icon" onClick={() => submitNewCategory()}>
+                            <Check />
+                        </Button>
+    
+                    </TableCell>  
+                </TableRow>
+            )}
+
+
 
             </TableBody>
 
 
         </Table>
+        <Button onClick={() => setCategoryCreating(true)}>New Category</Button>
         </>
     )
 }
