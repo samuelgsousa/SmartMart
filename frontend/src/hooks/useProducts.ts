@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient, useMutationState } from '@tanstack/react-query';
 import ProductsService from "../services/products.service"
 import {Product}  from "@/interfaces/interfaces"
-import { convertArrayToCsv } from '@/utils/csvUtils';
+import { convertArrayToCsv, CsvLineError } from '@/utils/csvUtils';
 
 export const useProducts = () => {
     const queryClient = useQueryClient();
@@ -46,18 +46,22 @@ export const useProducts = () => {
         })
       });
 
+
+
       const { mutateAsync: bulkCreate } = useMutation({
-        mutationFn: async (products: any) => {
-          // Converter array para CSV 
-          const csv = convertArrayToCsv(products)
-          
-          const formData = new FormData()
-          const csvBlob = new Blob([csv], { type: 'text/csv' });
-    
-          // Adiciona o arquivo com nome específico
-          formData.append('file', csvBlob, 'products.csv');
-          
+        mutationFn: async (formData: FormData) => {
           const response = await ProductsService.bulkCreate(formData)
+          console.log("Resposta do provedor: ", response)
+
+          if(response.lineErros.length > 0){
+            throw new CsvLineError("Erro em algumas linhas", {
+              lineErros: response.lineErros,
+              total_erros: response.lineErros.length
+            });
+
+
+          }
+
           return response
         },
         onSuccess: () => {
