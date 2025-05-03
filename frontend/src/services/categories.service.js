@@ -1,4 +1,5 @@
 import httpClient from "./httpClient";
+import { DeleteCategoryError } from '@/utils/Errors';
 
 const CategoriesService = {
     getAll: async () => {
@@ -33,8 +34,15 @@ const CategoriesService = {
             const response = await httpClient.delete(`/categories/${category_id}`)
             return response
         } catch (error) {
-            console.error('Erro ao deletar categoria!', error);
-            throw new Error(error)
+            
+            if (error.response.status == 409) throw new DeleteCategoryError("Erro ao deletar categoria", {
+                status: error.response.status,
+                detail: error.response.data.detail
+            })
+            else {
+                console.error('Erro ao deletar categoria!', error); 
+                 throw new Error (error)
+            }
         }
     }
 }
