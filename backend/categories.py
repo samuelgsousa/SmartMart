@@ -77,7 +77,7 @@ async def atualizar_categoria(
     404: {"description": "Categoria não encontrada"},
     409: {"description": "Conflito com produtos existentes", "model": ConflictResponse}
 })
-async def excluir_categoria(category_id: int):
+async def excluir_categoria(category_id: int, delete_params: str = None):
     db = SessionLocal()
 
     # Busca a categoria no banco de dados
@@ -89,16 +89,42 @@ async def excluir_categoria(category_id: int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Categoria com ID {category_id} não encontrada"
         )
+ 
     
-     # Obter todos os produtos vinculados
+    # Obter todos os produtos vinculados
     produtos_vinculados = db_categoria.produto
     
+    additional_msg = "Nenhum produto vinculado"
+
     if produtos_vinculados:
-        # Se houver produtos vinculados, retornar informações detalhadas
-        raise HTTPException(
+        if delete_params == "force_delete": #Deleta todos os produtos vinculados a essa categoria
+            for produto in produtos_vinculados:
+                db.delete(produto)
+            db.commit()
+            additional_msg = f"{len(produtos_vinculados)} produtos foram excluídos"
+
+        elif delete_params == "reassign": #Altera a categoria de todos os produtos para "Outros"
+
+            categoria_outros = db.query(CategoryDB).filter(CategoryDB.name == "Outros").first()
+
+            if not categoria_outros: # Caso "Outros" não exista, cria e vincula
+                categoria_outros = CategoryDB(name="Outros")
+                db.add(categoria_outros)
+                db.commit()
+                db.refresh(categoria_outros)
+
+            # Atualiza todos os produtos vinculados
+            for produto in produtos_vinculados:
+                produto.category_id = categoria_outros.id
+            db.commit()
+
+            additional_msg = f"{len(produtos_vinculados)} produtos tiveram suas categorias alteradas para Outros"
+
+        elif not delete_params: #Caso existam produtos vinculados, mas não tenha sido passado parâmetros para deletar, retorna um erro
+            raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
-                "message": "Existem produtos vinculados a esta categoria",
+                "message": "Existem produtos vinculados a esta categoria, por favor, passe um parâmetro de exclusão",
                 "products": [
                     {
                         "id": produto.id,
@@ -107,12 +133,11 @@ async def excluir_categoria(category_id: int):
                     } for produto in produtos_vinculados
                 ],
                 "products_count": len(produtos_vinculados)
-            }
-        )
+            })
 
     # Remove a categoria
-   # db.delete(db_categoria)
-   # db.commit()
+    db.delete(db_categoria)
+    db.commit()
     db.close()
     
-    return {"mensagem": f"Cateoria com ID {category_id} excluída com sucesso"}
+    return {"mensagem": f"Categoria com ID {category_id} excluída com sucesso. {additional_msg}"}
