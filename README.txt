@@ -19,4 +19,6 @@ NOTA: Adicionar validação ao adicionar categorias, para evitar duplicações
 
 NOTA: Adicionar botão para baixar linhas que estão com erro, para permitir edição fácil
 
+NOTA: ALTERAR CONSTRAINT DE SALES PARA "ONDELETE CASCADE"
+
 Simular delay: await new Promise(resolve => setTimeout(resolve, 5000)); // 5 segundos
