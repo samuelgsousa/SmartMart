@@ -18,7 +18,7 @@ export function CsvUploader() {
   const [previewData, setPreviewData] = useState<any[]>([])
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const[bulkErrors, setBulkErrors] = useState([])
+  const[bulkErrors, setBulkErrors] = useState<any[]>([])
 
   const { bulkCreate} = useProducts()
 
