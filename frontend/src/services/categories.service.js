@@ -29,9 +29,13 @@ const CategoriesService = {
             throw new Error(error)
         }
     },
-    delete: async (category_id) => {
+    delete: async (category_id, delete_params) => {
         try {
-            const response = await httpClient.delete(`/categories/${category_id}`)
+            const response = await httpClient.delete(`/categories/${category_id}`, {
+                params: {
+                    delete_params: delete_params || "void"
+                  }
+            })
             return response
         } catch (error) {
             
