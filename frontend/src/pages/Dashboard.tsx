@@ -14,7 +14,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PieChartCard } from '@/components/charts/PieChart';
-import BarChartComponent from '@/components/charts/BarChart';
+import BarChartCard from '@/components/charts/BarChart';
 
 const Dashboard = () => {
   const { chartData, isLoading, error } = useSalesData();
@@ -35,8 +35,8 @@ const Dashboard = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {/* Gráfico de Quantidade */}
-      
-      <BarChartComponent chartData={chartData} isLoading={isLoading}/>
+
+      <BarChartCard chartData={chartData} isLoading={isLoading}/>
 
       {/* Gráfico de Lucro */}
       <Card>

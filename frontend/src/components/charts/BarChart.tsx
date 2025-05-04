@@ -25,7 +25,7 @@ const chartConfig = {
     },
   };
 
-const BarChartComponent = ({chartData, isLoading}) => {
+const BarChartCard = ({chartData, isLoading}) => {
      
     //Gráfico de Quantidade 
     return (
@@ -65,4 +65,4 @@ const BarChartComponent = ({chartData, isLoading}) => {
     )
 }
 
-export default BarChartComponent
+export default BarChartCard
