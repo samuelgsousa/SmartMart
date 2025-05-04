@@ -35,6 +35,7 @@ export const useProducts = () => {
     mutationKey: ['deleteProduct'],
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['products'] });
+        queryClient.invalidateQueries({ queryKey: ['sales'] });
     }
     });
 
