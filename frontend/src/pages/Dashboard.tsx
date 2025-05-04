@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSalesData } from '@/hooks/useSalesData';
-import { PieChartCard } from '@/components/charts/PieChart';
+import PieChartCard  from '@/components/charts/PieChart';
 import BarChartCard from '@/components/charts/BarChart';
 import AreaChartCard from '@/components/charts/AreaChart';
 

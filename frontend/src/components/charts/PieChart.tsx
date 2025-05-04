@@ -8,7 +8,7 @@ const COLORS = [
     '#A28DFF', '#FF6666', '#4DD2FF', '#FFB3BA'
   ];
   
-  export const PieChartCard = () => {
+const PieChartCard = () => {
     const { categoryData, isLoading } = useCategoryData();
   
     return (
@@ -66,3 +66,5 @@ const COLORS = [
       </Card>
     );
   };
+
+export default PieChartCard

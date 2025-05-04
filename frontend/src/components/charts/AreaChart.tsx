@@ -1,9 +1,6 @@
-import { useSalesData } from '@/hooks/useSalesData';
 import { 
   Area, 
   AreaChart, 
-  Bar, 
-  BarChart, 
   CartesianGrid, 
   XAxis, 
   YAxis, 
@@ -12,10 +9,8 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PieChartCard } from '@/components/charts/PieChart';
-import BarChartCard from '@/components/charts/BarChart';
 
-const chartConfig = {
+  const chartConfig = {
     totalQuantity: {
       label: "Quantidade Vendida",
       color: "#8884d8",
