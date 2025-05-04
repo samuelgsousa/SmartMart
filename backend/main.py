@@ -16,6 +16,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "http://localhost:8000"
     # Depois adicionar outros domínios/deploys aqui:
     # Ex: "https://meu-app.vercel.app",
 ]
@@ -26,6 +27,7 @@ app.add_middleware(
     allow_credentials=True,        
     allow_methods=["*"],    
     allow_headers=["*"],
+    expose_headers=["*"] 
 )
 
 
