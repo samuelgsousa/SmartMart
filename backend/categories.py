@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, relationship
 from pydantic import BaseModel
 from typing import List
@@ -77,7 +77,8 @@ async def atualizar_categoria(
     404: {"description": "Categoria não encontrada"},
     409: {"description": "Conflito com produtos existentes", "model": ConflictResponse}
 })
-async def excluir_categoria(category_id: int, delete_params: str = None):
+async def excluir_categoria(category_id: int, delete_params: str = Query(None)):
+
     db = SessionLocal()
 
     # Busca a categoria no banco de dados
@@ -90,11 +91,13 @@ async def excluir_categoria(category_id: int, delete_params: str = None):
             detail=f"Categoria com ID {category_id} não encontrada"
         )
  
+
     
     # Obter todos os produtos vinculados
     produtos_vinculados = db_categoria.produto
     
     additional_msg = "Nenhum produto vinculado"
+
 
     if produtos_vinculados:
         if delete_params == "force_delete": #Deleta todos os produtos vinculados a essa categoria
@@ -120,7 +123,7 @@ async def excluir_categoria(category_id: int, delete_params: str = None):
 
             additional_msg = f"{len(produtos_vinculados)} produtos tiveram suas categorias alteradas para Outros"
 
-        elif not delete_params: #Caso existam produtos vinculados, mas não tenha sido passado parâmetros para deletar, retorna um erro
+        elif delete_params == "void" or not delete_params: #Caso existam produtos vinculados, mas não tenha sido passado parâmetros para deletar, retorna um erro
             raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
