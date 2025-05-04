@@ -31,7 +31,7 @@ export const useCategories = () => {
     });
 
     const deleteMutation = useMutation({
-    mutationFn: (id: number) => CategoriesService.delete(id),
+    mutationFn: (params: {id: number, delete_params: string}) => CategoriesService.delete(params.id, params.delete_params),
     mutationKey: ['deleteCategory'],
     onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['categories'] });
