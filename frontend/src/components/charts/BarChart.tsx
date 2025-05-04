@@ -1,7 +1,4 @@
-import { useSalesData } from '@/hooks/useSalesData';
 import { 
-  Area, 
-  AreaChart, 
   Bar, 
   BarChart, 
   CartesianGrid, 
@@ -12,7 +9,6 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PieChartCard } from '@/components/charts/PieChart';
 
 const chartConfig = {
     totalQuantity: {
