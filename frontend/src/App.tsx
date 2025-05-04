@@ -1,9 +1,10 @@
-import React from"react";
+import React, { useEffect } from"react";
 import AppRoutes from "./routes/AppRoutes";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Link } from "react-router-dom";
-import { BadgeDollarSign, House, Package } from "lucide-react";
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar"
+import { useLocation, Link } from "react-router-dom";
+import { ArrowLeft, BadgeDollarSign, House, Package } from "lucide-react";
+import { useSidebar } from '@/components/ui/sidebar'; 
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,14 +17,22 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const location = useLocation();
+  const { open, setOpen  } = useSidebar();
 
-    return(
-    <QueryClientProvider client={queryClient}>
-      <SidebarProvider>
-        <main className="w-full min-h-screen">
-        <h1 className="text-3xl font-bold underline">Smart Mart</h1>
-          <SidebarTrigger />
+  useEffect(() => {
+    if (open) {
+      setOpen(false);
+    }
+  }, [location.pathname]);
 
+  return(
+  <QueryClientProvider client={queryClient}>
+      <main className="w-full min-h-screen">
+      <h1 className="text-3xl font-bold underline">Smart Mart</h1>
+        <SidebarTrigger >
+        <ArrowLeft />
+        </SidebarTrigger>
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
@@ -58,7 +67,6 @@ function App() {
 
         <AppRoutes />
         </main>
-      </SidebarProvider>
 
     </QueryClientProvider>
     )
