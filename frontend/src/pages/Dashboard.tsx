@@ -14,6 +14,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PieChartCard } from '@/components/charts/PieChart';
+import BarChartComponent from '@/components/charts/BarChart';
 
 const Dashboard = () => {
   const { chartData, isLoading, error } = useSalesData();
@@ -34,38 +35,8 @@ const Dashboard = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {/* Gráfico de Quantidade */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quantidade de Vendas Mensais</CardTitle>
-        </CardHeader>
-        <CardContent className="h-64">
-          {isLoading ? (
-            <Skeleton className="h-full w-full" />
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis 
-                  dataKey="date"
-                  tickFormatter={(value) => 
-                    new Date(value).toLocaleDateString('pt-BR', { 
-                      month: 'short', 
-                      year: '2-digit' 
-                    })
-                  }
-                />
-                <YAxis />
-                <Tooltip />
-                <Bar 
-                  dataKey="totalQuantity"
-                  fill={chartConfig.totalQuantity.color}
-                  name={chartConfig.totalQuantity.label}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          )}
-        </CardContent>
-      </Card>
+      
+      <BarChartComponent chartData={chartData} isLoading={isLoading}/>
 
       {/* Gráfico de Lucro */}
       <Card>
