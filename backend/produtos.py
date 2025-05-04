@@ -18,7 +18,13 @@ class ProdutoDB(Base):
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 
     brand = Column(String(45))
-    sales = relationship("SaleDB", back_populates="produto")
+    sales = relationship(
+        "SaleDB", 
+        back_populates="produto",
+        cascade="all, delete",  
+        passive_deletes=True    
+    )
+
     category = relationship("CategoryDB", back_populates="produto")
 
 # --- Schemas Pydantic ---

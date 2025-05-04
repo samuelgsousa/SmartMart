@@ -10,7 +10,7 @@ from datetime import date
 class SaleDB(Base):
     __tablename__ = "sales"
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
+    product_id = Column(Integer, ForeignKey("products.id", ondelete='CASCADE'))
     quantity = Column(Integer)
     total_price = Column(Float)
     date = Column(Date)
