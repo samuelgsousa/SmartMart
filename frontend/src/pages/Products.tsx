@@ -25,6 +25,7 @@ import { CsvUploader } from '@/components/CsvUploader';
 import { Input } from '@/components/ui/input';
 import { DeleteCategoryError } from '@/utils/Errors';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@radix-ui/react-select';
+import { formatPrice } from '@/utils/formatUtils';
 
 
 const Products = () => {
@@ -98,7 +99,7 @@ const TabProducts = () => {
                         <TableCell key={`product_id_${product.id}`}>{product.id}</TableCell>
                         <TableCell key={`product_name_${product.id}`}>{product.name}</TableCell>
                         <TableCell key={`product_description_${product.id}`}>{product.description}</TableCell>
-                        <TableCell key={`product_price_${product.id}`}>{product.price}</TableCell>
+                        <TableCell key={`product_price_${product.id}`}>{formatPrice(product.price)}</TableCell>
                         <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
                         <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
                         <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
