@@ -1,106 +1,109 @@
-import React, { useEffect, useState } from 'react';
-import { TrendingUp } from "lucide-react"
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-
-import {
-    ChartConfig,
-    ChartContainer,
-    ChartTooltip,
-    ChartTooltipContent,
-  } from "@/components/ui/chart"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
+import React from 'react';
+import { useSalesData } from '@/hooks/useSalesData';
+import { 
+  Area, 
+  AreaChart, 
+  Bar, 
+  BarChart, 
+  CartesianGrid, 
+  XAxis, 
+  YAxis, 
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Dashboard = () => {
+  const { chartData, isLoading, error } = useSalesData();
 
-    const chartData = [
-        { month: "January", desktop: 186, mobile: 80 },
-        { month: "February", desktop: 305, mobile: 200 },
-        { month: "March", desktop: 237, mobile: 120 },
-        { month: "April", desktop: 73, mobile: 190 },
-        { month: "May", desktop: 209, mobile: 130 },
-        { month: "June", desktop: 214, mobile: 140 },
-      ]
-
-      const chartConfig = {
-        desktop: {
-          label: "Desktop",
-          color: "red",
-        },
-        mobile: {
-          label: "Mobile",
-          color: "blue",
-        },
-      } satisfies ChartConfig
-      
-
-
-    return (
-        <>
-
-        <Card className={cn("w-[380px]")} >
-      <CardHeader>
-        <CardTitle>Area Chart - Stacked</CardTitle>
-        <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent indicator="dot" />}
-            />
-            <Area
-              dataKey="mobile"
-              type="natural"
-              fill="var(--color-mobile)"
-              fillOpacity={0.4}
-              stroke="var(--color-mobile)"
-              stackId="a"
-            />
-            <Area
-              dataKey="desktop"
-              type="natural"
-              fill="var(--color-desktop)"
-              fillOpacity={0.4}
-              stroke="var(--color-desktop)"
-              stackId="a"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-      <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
-            </div>
-          </div>
-        </div>
-      </CardFooter>
-    </Card>
-        </>
-  );
+  const chartConfig = {
+    totalQuantity: {
+      label: "Quantidade Vendida",
+      color: "#8884d8",
+    },
+    totalProfit: {
+      label: "Lucro Total",
+      color: "#82ca9d",
+    },
   };
-  
+
+  if (error) return <div>Error loading data</div>;
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      {/* Gráfico de Quantidade */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Quantidade de Vendas Mensais</CardTitle>
+        </CardHeader>
+        <CardContent className="h-64">
+          {isLoading ? (
+            <Skeleton className="h-full w-full" />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="date"
+                  tickFormatter={(value) => 
+                    new Date(value).toLocaleDateString('pt-BR', { 
+                      month: 'short', 
+                      year: '2-digit' 
+                    })
+                  }
+                />
+                <YAxis />
+                <Tooltip />
+                <Bar 
+                  dataKey="totalQuantity"
+                  fill={chartConfig.totalQuantity.color}
+                  name={chartConfig.totalQuantity.label}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Gráfico de Lucro */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Lucro Mensal</CardTitle>
+        </CardHeader>
+        <CardContent className="h-64">
+          {isLoading ? (
+            <Skeleton className="h-full w-full" />
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="date"
+                  tickFormatter={(value) => 
+                    new Date(value).toLocaleDateString('pt-BR', { 
+                      month: 'short', 
+                      year: '2-digit' 
+                    })
+                  }
+                />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  type="monotone"
+                  dataKey="totalProfit"
+                  stroke={chartConfig.totalProfit.color}
+                  fill={chartConfig.totalProfit.color}
+                  fillOpacity={0.3}
+                  name={chartConfig.totalProfit.label}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
 export default Dashboard;
