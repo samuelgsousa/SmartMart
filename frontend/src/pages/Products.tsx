@@ -122,7 +122,10 @@ const TabCategories = () => {
 
     const [categoryCreating, setCategoryCreating] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState('')
+
+    const [categoryDeletingId, setCategoryDeletingId] = useState(null)
     const [warningDialog, setWarningDialog] = useState(false)
+    const [deleteOption, setDeleteOption] = useState('reassign')
 
 
     const handleCategoryUpdate = async (category) => {
@@ -165,15 +168,19 @@ const TabCategories = () => {
         }
     }
 
-    const submitDeleteCategory = async (category_id) => {
-
+    const submitDeleteCategory = async (category_id, delete_params) => {
+        
         try {
-            await deleteCategory(category_id)
+            await deleteCategory({id: category_id, delete_params: delete_params})
 
         } catch (error) {
+
             if (error instanceof DeleteCategoryError) {
-                console.log("Conta de produtos: ", error.status.detail.products_count)
+                setWarningDialog(true)
+                setCategoryDeletingId(category_id)
             }
+
+            else console.error(error)
        
             
 
@@ -184,15 +191,34 @@ const TabCategories = () => {
 
     return (
         <>
-        <Dialog open={true} onOpenChange={setWarningDialog}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle> 
-                            Aviso! Essa categoria possui [x] produtos vinculados a ela! Como deseja prosseguir?
-                        </DialogTitle>
-                    </DialogHeader>
+        <Dialog open={warningDialog} onOpenChange={setWarningDialog}>
+            <DialogContent>
+                <DialogHeader><DialogTitle> Aviso! A categoria {categoryDeletingId} possui [x] produtos vinculados a ela! Como deseja prosseguir?</DialogTitle></DialogHeader>
 
-                </DialogContent>
+                        
+            <div className="flex items-center mb-4">
+                <input checked={deleteOption === 'force_delete'} onChange={(e) => setDeleteOption(e.target.value)} type="radio" value="force_delete" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                <label htmlFor="default-radio-1" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Deletar todos os produtos vinculados</label>
+            </div>
+
+            <div className="flex items-center">
+                <input checked={deleteOption === 'reassign'} onChange={(e) => setDeleteOption(e.target.value)} type="radio" value="reassign" name="default-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                <label htmlFor="default-radio-2" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Alterar a categoria dos produtos para "Outros"</label>
+            </div>
+
+            {deleteOption === 'force_delete' && (
+                <p className="text-red-600">ATENÇÃO: A exclusão dos produtos também removerá permanentemente TODOS os registros de vendas associados!</p>
+            )}
+
+        <Button variant="destructive" size="sm" onClick={() => submitDeleteCategory(categoryDeletingId, deleteOption)}>
+            Continuar
+        </Button>
+        
+        <Button variant="success" size="sm" onClick={() => setWarningDialog(false)}>
+            Cancelar
+        </Button>
+
+            </DialogContent>
         </Dialog>
         <Table>
             <TableHeader>
