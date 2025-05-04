@@ -38,11 +38,14 @@ const TabProducts = () => {
     
     const [DialogIsOpen, setDialogIsOpen] = useState(false)
     const [productUpdating, setProductUpdating] = useState(null)
-    const [categoryFilter, setCategoryFilter] = useState<string>('')
+    const [categoryFilter, setCategoryFilter] = useState<string>('All categories')
+    const [filteredProducts, setFilteredProducts] = useState(products)
 
     useEffect(() => {
-        console.log(categoryFilter)
-      }, [categoryFilter]);
+        
+        if (categoryFilter != "All categories") setFilteredProducts(products.filter(product => String(product.category_id) === categoryFilter))
+        else setFilteredProducts(products)
+      }, [categoryFilter]); //sempre que o valor do select de filtro muda, ele filtra os produtos para a categoria equivalente
 
     const handleNewProduct = () => {
         setProductUpdating(null)
@@ -62,8 +65,9 @@ const TabProducts = () => {
 
             <div>
 
-            <label htmlFor="categories_filter" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select an option</label>
-            <select onChange={(e) => setCategoryFilter(e.target.value)}  value={categoryFilter} id="categories_filter" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <label htmlFor="categories_filter" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter by category</label>
+
+            <select onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} id="categories_filter" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option selected>All categories</option>
                 {categories?.map(category => (
                      <option key={category.id} value={category.id}>{category.name}</option>
@@ -89,7 +93,7 @@ const TabProducts = () => {
             </TableHeader>
 
             <TableBody>
-                {products.map(product => (
+                {filteredProducts.map(product => (
                     <TableRow key={`product_row_${product.id}`}>
                         <TableCell key={`product_id_${product.id}`}>{product.id}</TableCell>
                         <TableCell key={`product_name_${product.id}`}>{product.name}</TableCell>
