@@ -13,6 +13,7 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PieChartCard } from '@/components/charts/PieChart';
 
 const Dashboard = () => {
   const { chartData, isLoading, error } = useSalesData();
@@ -102,6 +103,11 @@ const Dashboard = () => {
           )}
         </CardContent>
       </Card>
+
+      <div className="md:col-span-1">
+        <PieChartCard />
+      </div>
+      
     </div>
   );
 };
