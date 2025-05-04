@@ -20,6 +20,7 @@ import {useSales} from '../hooks/useSales'
 import SalesForm from '@/components/forms/SalesForm';
 import { Button } from '@/components/ui/button';
 import { Trash2, Pencil, Loader2   } from "lucide-react";
+import { formatPrice } from '@/utils/formatUtils';
 
 
 const Sales = () => {
@@ -61,7 +62,7 @@ const Sales = () => {
                 <TableRow key={sale.id}>
                     <TableCell key={"sale_id"}>{sale.id}</TableCell>
                     <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
-                    <TableCell key={"total_price_cell"}>{sale.total_price}</TableCell>
+                    <TableCell key={"total_price_cell"}>{formatPrice(sale.total_price)}</TableCell>
                     <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
                     <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
                     <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
