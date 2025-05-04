@@ -124,6 +124,7 @@ const TabCategories = () => {
     const [newCategoryName, setNewCategoryName] = useState('')
 
     const [categoryDeletingId, setCategoryDeletingId] = useState(null)
+    const [errorProductCount, setErrorProductCount] = useState(null)
     const [warningDialog, setWarningDialog] = useState(false)
     const [deleteOption, setDeleteOption] = useState('reassign')
 
@@ -178,6 +179,8 @@ const TabCategories = () => {
             if (error instanceof DeleteCategoryError) {
                 setWarningDialog(true)
                 setCategoryDeletingId(category_id)
+                console.log("Detalhes: ", error.status.detail.products_count)
+                setErrorProductCount(error.status.detail.products_count)
             }
 
             else console.error(error)
@@ -193,7 +196,7 @@ const TabCategories = () => {
         <>
         <Dialog open={warningDialog} onOpenChange={setWarningDialog}>
             <DialogContent>
-                <DialogHeader><DialogTitle> Aviso! A categoria {categoryDeletingId} possui [x] produtos vinculados a ela! Como deseja prosseguir?</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle> Aviso! A categoria {categoryDeletingId} possui {errorProductCount} produto() vinculados a ela! Como deseja prosseguir?</DialogTitle></DialogHeader>
 
                         
             <div className="flex items-center mb-4">
