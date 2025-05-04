@@ -1,108 +1,105 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table";
+import { TrendingUp } from "lucide-react"
+import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 
 import {
-Dialog,
-DialogContent,
-DialogHeader,
-DialogTitle,
-} from "@/components/ui/dialog"
-  
-
-import {useSales} from '../hooks/useSales'
-import SalesForm from '@/components/forms/SalesForm';
-import { Button } from '@/components/ui/button';
-import { Trash2, Pencil, Loader2   } from "lucide-react";
-
+    ChartConfig,
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+  } from "@/components/ui/chart"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 const Dashboard = () => {
 
-    const {sales, isLoading, isFetching, isError, deleteSale, deletingStates} = useSales()
-    const [saleUpdating, setSaleUpdating] = useState(null)
-    const [DialogIsOpen, setDialogIsOpen] = useState(false)
+    const chartData = [
+        { month: "January", desktop: 186, mobile: 80 },
+        { month: "February", desktop: 305, mobile: 200 },
+        { month: "March", desktop: 237, mobile: 120 },
+        { month: "April", desktop: 73, mobile: 190 },
+        { month: "May", desktop: 209, mobile: 130 },
+        { month: "June", desktop: 214, mobile: 140 },
+      ]
 
-    // Função auxiliar para verificar o estado ao deletar um produto
-    const isDeleting = (saleId: number) => deletingStates.some(state => state.id === saleId && state.isDeleting);
+      const chartConfig = {
+        desktop: {
+          label: "Desktop",
+          color: "hsl(var(--chart-1))",
+        },
+        mobile: {
+          label: "Mobile",
+          color: "hsl(var(--chart-2))",
+        },
+      } satisfies ChartConfig
+      
 
-    const handleSaleUpdate = (sale: any) => {
-        //console.log("venda: ", sale)
-        setSaleUpdating(sale)
-        setDialogIsOpen(true)
-    }
-
-    const handleNewSale = () => {
-        setSaleUpdating(null)
-        setDialogIsOpen(true)
-    }
 
     return (
         <>
+        <p>Thats the dashboard</p>
 
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead key={"sale_id"}>Sale Id</TableHead>
-                    <TableHead key={"product_name"}>Product Name</TableHead>
-                    <TableHead key={"total_price"}>Total Price</TableHead>
-                    <TableHead key={"quantity"}>Quantity</TableHead>
-                    <TableHead key={"date"}>Date</TableHead>
-                </TableRow>
-            </TableHeader>
-
-            <TableBody>
-            {sales.map(sale => (
-                <TableRow key={sale.id}>
-                    <TableCell key={"sale_id"}>{sale.id}</TableCell>
-                    <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
-                    <TableCell key={"total_price_cell"}>{sale.total_price}</TableCell>
-                    <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
-                    <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
-                    <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
-
-                        <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)} disabled={isDeleting(sale.id)}>
-
-                            {isDeleting(sale.id) ? 
-                            ( <Loader2 className="animate-spin"/>)  
-                            :
-                            (<Trash2 className="h-5 w-5"/>)  
-                            }
-
-                        </Button>
-
-                        <Button variant="warning" size="icon" onClick={() => handleSaleUpdate(sale)}> 
-                        <Pencil className="h-5 w-5" />
-
-                        </Button>
-                    </TableCell>
-                </TableRow>
-            ))}
-            </TableBody>
-        </Table>
-
-        <Button variant="success" onClick={() => handleNewSale()}>New Sale</Button>
-
-        <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
-
-
-            <DialogContent>
-                <DialogHeader><DialogTitle>{saleUpdating ? `Update sale ${saleUpdating.id}` : 'New Sale'}</DialogTitle></DialogHeader>
-
-                <SalesForm saleUpdating={saleUpdating} onSuccess={() => setDialogIsOpen(false)}/>
-
-            </DialogContent>
-        </Dialog>
-
-
-        
-
-      
+        <Card className={cn("w-[380px]")} >
+      <CardHeader>
+        <CardTitle>Area Chart - Stacked</CardTitle>
+        <CardDescription>
+          Showing total visitors for the last 6 months
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <AreaChart
+            accessibilityLayer
+            data={chartData}
+            margin={{
+              left: 12,
+              right: 12,
+            }}
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent indicator="dot" />}
+            />
+            <Area
+              dataKey="mobile"
+              type="natural"
+              fill="var(--color-mobile)"
+              fillOpacity={0.4}
+              stroke="var(--color-mobile)"
+              stackId="a"
+            />
+            <Area
+              dataKey="desktop"
+              type="natural"
+              fill="var(--color-desktop)"
+              fillOpacity={0.4}
+              stroke="var(--color-desktop)"
+              stackId="a"
+            />
+          </AreaChart>
+        </ChartContainer>
+      </CardContent>
+      <CardFooter>
+        <div className="flex w-full items-start gap-2 text-sm">
+          <div className="grid gap-2">
+            <div className="flex items-center gap-2 font-medium leading-none">
+              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+            </div>
+            <div className="flex items-center gap-2 leading-none text-muted-foreground">
+              January - June 2024
+            </div>
+          </div>
+        </div>
+      </CardFooter>
+    </Card>
         </>
   );
   };
