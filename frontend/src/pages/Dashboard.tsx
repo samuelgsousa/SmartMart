@@ -25,11 +25,11 @@ const Dashboard = () => {
       const chartConfig = {
         desktop: {
           label: "Desktop",
-          color: "hsl(var(--chart-1))",
+          color: "red",
         },
         mobile: {
           label: "Mobile",
-          color: "hsl(var(--chart-2))",
+          color: "blue",
         },
       } satisfies ChartConfig
       
@@ -37,7 +37,6 @@ const Dashboard = () => {
 
     return (
         <>
-        <p>Thats the dashboard</p>
 
         <Card className={cn("w-[380px]")} >
       <CardHeader>
