@@ -14,4 +14,45 @@ Aplicação web desenvolvida para oferecer uma base sólida de visualização e 
 
 - **Filtros por categoria**: permite filtrar produtos com base na categoria selecionada.
 
-## Instalação
+## Instalação:
+
+1. Clone o repositório:
+
+`git clone https://github.com/samuelgsousa/SmartMart`
+
+2. Acesse a pasta **backend**, 
+
+```bash
+cd SmartMart/backend
+```
+
+3. crie um ambiente virtual e instale as dependências:
+
+Para Windows:
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+Para Linux/Mac:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+4. Instale as dependências
+
+```bash
+pip install -r requirements.txt
+```
+
+5. Inicie o servidor
+
+```bash
+uvicorn main:app --reload
+```
+
+
+
