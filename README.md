@@ -88,7 +88,7 @@ Esse comando:
 
 - Cria as tabelas automaticamente
 
-- Inserir dados iniciais de categorias, produtos e vendas
+- Insere dados iniciais de categorias, produtos e vendas
 
 
 ### ⚙️ Opção 2. Manual:
