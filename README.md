@@ -59,8 +59,10 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=smartmart
 DB_USER=root
-DB_PASSWORD=0000
+DB_PASSWORD=
 ```
+
+🔒 Se no seu MySQL local (Workbench, CLI etc.) você criou ou usa o usuário root com a senha, então `DB_PASSWORD` deve conter essa senha. exemplo: `DB_PASSWORD=senhasecreta123`
 
 > Essas variáveis de ambiente são essenciais para a criação e conexão com o banco de dados.
 
