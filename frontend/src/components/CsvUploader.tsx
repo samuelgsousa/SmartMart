@@ -12,6 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CsvLineError } from '@/utils/csvUtils'
+import { Loader2 } from 'lucide-react'
 
 
 export function CsvUploader() {
@@ -20,7 +21,7 @@ export function CsvUploader() {
 
   const[bulkErrors, setBulkErrors] = useState<any[]>([])
 
-  const { bulkCreate} = useProducts()
+  const { bulkCreate, isBulking} = useProducts()
 
   const [csvFile, setCsvFile] = useState<File | null>(null)
 
@@ -142,12 +143,16 @@ export function CsvUploader() {
       {previewData?.length > 0 && (
         <>
         <div className='flex gap-3'>
-        <Button variant='success' onClick={() => onSubmit()}>Enviar</Button>
+
+        <Button variant='success' className='w-20' onClick={() => onSubmit()} disabled={isBulking}>
+          
+          {isBulking ? (<Loader2 className="animate-spin"/>):(<>Enviar</>)}
+        </Button>
         
         <Button variant="destructive" onClick={() => {
             setCsvFile(null)
             setPreviewData(null)
-            }}>Limpar</Button>
+            }} disabled={isBulking}>Limpar</Button>
 
         </div>
 
