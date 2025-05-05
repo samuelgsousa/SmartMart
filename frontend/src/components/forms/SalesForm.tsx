@@ -22,7 +22,7 @@ import { format  } from "date-fns"
 import {useSales} from '../../hooks/useSales'
 import {useProducts} from '../../hooks/useProducts'
 import { Product } from "@/interfaces/interfaces"
-
+import DatePicker from "../ui/Datepicker"
 
 const formSchema = z.object({
     product_id: z.coerce    .number({
@@ -45,14 +45,23 @@ const formSchema = z.object({
     .positive("Quantidade não pode ser zero")
     .min(1, "Quantidade mínima é 1"),
 
-    date: z.string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, {
-      message: "Formato de data inválido (Use YYYY-MM-DD)",
-    })
-    .refine(date => {
-      const parsedDate = new Date(date);
-      return !isNaN(parsedDate.getTime());
-    }, { message: "Data inválida" })
+    date: z.preprocess((val) => {
+      if (typeof val === "string") {
+
+        return val.split("T")[0]; 
+      }
+      return val;
+    },
+    z.string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, {
+        message: "Formato de data inválido (Use YYYY-MM-DD)",
+      })
+      .refine((date) => {
+        // garante que seja uma data válida
+        const parsed = new Date(date);
+        return !isNaN(parsed.getTime());
+      }, { message: "Data inválida" })
+    ),
 
   })
 
@@ -66,7 +75,7 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
     function getCurrentDateLocal(): string {
         const now = new Date()
         const offsetMinutes = now.getTimezoneOffset()
-        const correctedMs = now.getTime() + offsetMinutes * 60 * 10000
+        const correctedMs = now.getTime() + offsetMinutes * 60 * 1000
         const localDate = new Date(correctedMs)
       
         const iso = localDate.toISOString()      
@@ -85,15 +94,16 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
     })
 
     const onSubmit = async (data) => {
-        try {
-          if (saleUpdating) await updateSale({ id: saleUpdating.id, data })
-          else await createSale(data)
+      console.log("Dados a serem enviados: ", data)
+       try {
+         if (saleUpdating) await updateSale({ id: saleUpdating.id, data })
+         else await createSale(data)
           
-          onSuccess()
+         onSuccess()
 
-        } catch (error) {
-            alert("Falha ao enviar venda!")
-        }
+       } catch (error) {
+           alert("Falha ao enviar venda!")
+       }
     }
 
     return (
@@ -167,38 +177,13 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "dd/MM/yyyy")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-background z-50" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={null}
-                    onSelect={(date) => {
-                        const isoDate = date?.toISOString().split('T')[0];
-                        field.onChange(isoDate);
-                      }}
+              <DatePicker
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value);
+              }}
+            />
 
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
               <FormMessage />
             </FormItem>
           )}
