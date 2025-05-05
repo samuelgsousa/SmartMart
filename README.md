@@ -1,4 +1,4 @@
-📊 # Painel Smart Mart
+# 📊 Painel Smart Mart
 
 Aplicação web desenvolvida para oferecer uma base sólida de visualização e gestão de dados de vendas. Permite o cadastro manual ou em lote de produtos, bem como a análise de desempenho por meio de gráficos interativos.
 
