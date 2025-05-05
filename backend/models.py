@@ -1,4 +1,3 @@
-from altair import Column
 from sqlalchemy import Column, Integer, String, ForeignKey,  Date, Float
 from sqlalchemy.orm import relationship
 from database import Base
@@ -13,7 +12,7 @@ class ProdutoDB(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255))
-    description = Column(String)
+    description = Column(String(255))
     price = Column(Float)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
 
