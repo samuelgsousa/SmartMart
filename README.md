@@ -54,5 +54,55 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
+## 🛠️ Configuração do Banco de Dados
+Antes de iniciar a aplicação, certifique-se de configurar corretamente as variáveis de ambiente no arquivo .env, localizado na raiz da pasta backend.
 
+Crie um arquivo .env com o seguinte conteúdo:
+
+```ini
+DB_HOST=seu_host_remoto_ou_localhost
+DB_PORT=3306
+DB_NAME=nome_do_banco
+DB_USER=usuario
+DB_PASSWORD=senha
+```
+
+Exemplo de ambiente local:
+```ini
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=smartmart
+DB_USER=root
+DB_PASSWORD=5246
+```
+
+## Tecnologias Utilizadas
+
+A aplicação foi construída utilizando as seguintes tecnologias:
+
+### 🧠 Backend
+
+- Python – Linguagem principal para regras de negócio
+
+- FastAPI – Framework web moderno e performático para criação de APIs REST
+
+- SQLAlchemy – ORM para comunicação com banco de dados relacional
+
+- MySQL – Banco de dados relacional utilizado para armazenar os dados
+
+- Uvicorn – Servidor ASGI leve e rápido para executar a aplicação FastAPI
+
+- python-dotenv – Para gerenciamento de variáveis de ambiente
+
+### 📦 Frontend
+
+- React – Biblioteca JavaScript para construção da interface do usuário
+
+- Vite – Ferramenta para desenvolvimento e build do frontend
+
+- TypeScript – Superset do JavaScript que adiciona tipagem estática
+
+- Tailwind CSS – Framework de estilos utilitário para estilização rápida e responsiva
+
+Chart.js – Biblioteca para geração de gráficos interativos
 
