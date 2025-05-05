@@ -14,6 +14,7 @@ Aplicação web desenvolvida para oferecer uma base sólida de visualização e 
 
 - **Filtros por categoria**: permite filtrar produtos com base na categoria selecionada.
 
+
 ## Instalação:
 
 1. Clone o repositório:
@@ -48,38 +49,77 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-5. Inicie o servidor
 
-```bash
-uvicorn main:app --reload
-```
+## 🛠️ Configuração do ambiente (backend)
 
-## 🛠️ Configuração do Banco de Dados
-Antes de iniciar a aplicação, certifique-se de configurar corretamente as variáveis de ambiente no arquivo .env, localizado na raiz da pasta backend.
+2. Acesse a pasta `backend` e crie um arquivo `.env` com o seguinte conteúdo:
 
-Crie um arquivo .env com o seguinte conteúdo:
-
-```ini
-DB_HOST=seu_host_remoto_ou_localhost
-DB_PORT=3306
-DB_NAME=nome_do_banco
-DB_USER=usuario
-DB_PASSWORD=senha
-```
-
-Exemplo de ambiente local:
 ```ini
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=smartmart
 DB_USER=root
-DB_PASSWORD=5246
+DB_PASSWORD=0000
 ```
 
+> Essas variáveis de ambiente são essenciais para a criação e conexão com o banco de dados.
 
-## Executando o Frontend
+## 🗃️ Inicialização do Banco de Dados
 
-Siga os passos abaixo para rodar o frontend da aplicação:
+No terminal, navegue até a pasta do backend:
+
+```bash
+cd backend
+```
+
+Você pode escolher entre as duas opções abaixo para preparar o banco de dados:
+
+### ✅ Opção 1. Automática (Recomendada):
+
+Execute o script de inicialização:
+
+```bash
+python init_db.py
+```
+
+Esse comando:
+
+- Cria o banco de dados (caso ainda não exista)
+
+- Cria as tabelas automaticamente
+
+- Insere dados iniciais de categorias, produtos e vendas
+
+
+### ⚙️ Opção 2. Manual:
+
+1. Crie o banco de dados utilizando seu cliente MySQL (CLI, Workbench, phpMyAdmin, etc):
+
+```sql
+CREATE DATABASE IF NOT EXISTS smartmart
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+```
+
+2. Depois, volte ao terminal e execute:
+
+```bash
+python init_db.py
+```
+
+>Isso criará as tabelas e preencherá os dados iniciais, assumindo que o banco já exista.
+
+
+
+## Iniciando o servidor
+
+Depois de concluir as etapas acima, execute:
+
+```bash
+uvicorn main:app --reload
+```
+
+## Iniciando o Frontend
 
 1. Inicie um novo terminal e acesse a pasta do frontend:
 
