@@ -76,6 +76,35 @@ DB_USER=root
 DB_PASSWORD=5246
 ```
 
+
+## Executando o Frontend
+
+Siga os passos abaixo para rodar o frontend da aplicação:
+
+1. Inicie um novo terminal e acesse a pasta do frontend:
+
+```bash
+cd frontend
+```
+
+2. Instale as dependências (é necessário ter o Node.js instalado):
+
+```bash
+npm install
+```
+
+3. Inicie a aplicação:
+
+```bash
+npm run dev
+```
+
+```
+http://localhost:5173
+```
+
+> Certifique-se de que o backend esteja rodando antes de iniciar o frontend, pois ele consome os dados da API.
+
 ## Tecnologias Utilizadas
 
 A aplicação foi construída utilizando as seguintes tecnologias:
@@ -109,6 +138,3 @@ A aplicação foi construída utilizando as seguintes tecnologias:
 - Shadcn/ui – Componentes de interface modernos e acessíveis baseados em Tailwind
 
 - Lucide Icons – Conjunto de ícones de código aberto e personalizáveis
-
-
-
