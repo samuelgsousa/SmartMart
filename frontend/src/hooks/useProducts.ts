@@ -49,7 +49,7 @@ export const useProducts = () => {
 
 
 
-      const { mutateAsync: bulkCreate } = useMutation({
+      const bulkCreate = useMutation({
         mutationFn: async (formData: FormData) => {
           const response = await ProductsService.bulkCreate(formData)
           console.log("Resposta do provedor: ", response)
@@ -76,6 +76,7 @@ export const useProducts = () => {
         isLoading: productsQuery.isLoading,
         isFetching: productsQuery.isFetching,
         bulkCreate,
+        isBulking: bulkCreate.isPending, // Novo estado de pending
         
         // Mutations
         createProduct: createMutation.mutateAsync,
