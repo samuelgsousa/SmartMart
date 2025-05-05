@@ -28,9 +28,9 @@ function App() {
 
   return(
   <QueryClientProvider client={queryClient}>
-      <main className="w-full min-h-screen">
+      <main className="w-full min-h-screen ">
 
-        <div className="flex items-center ml-2 h-12 gap-3">
+        <div className="flex items-center pl-2 h-14 gap-3 bg-blue-700/50 text-white">
 
         <SidebarTrigger>
           <PanelRightClose className="size-7"/>

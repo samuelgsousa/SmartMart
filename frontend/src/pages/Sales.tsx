@@ -44,50 +44,51 @@ const Sales = () => {
     }
 
     return (
-        <>
-
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead key={"sale_id"}>Sale Id</TableHead>
-                    <TableHead key={"product_name"}>Product Name</TableHead>
-                    <TableHead key={"total_price"}>Total Price</TableHead>
-                    <TableHead key={"quantity"}>Quantity</TableHead>
-                    <TableHead key={"date"}>Date</TableHead>
-                </TableRow>
-            </TableHeader>
-
-            <TableBody>
-            {sales.map(sale => (
-                <TableRow key={sale.id}>
-                    <TableCell key={"sale_id"}>{sale.id}</TableCell>
-                    <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
-                    <TableCell key={"total_price_cell"}>{formatPrice(sale.total_price)}</TableCell>
-                    <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
-                    <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
-                    <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
-
-                        <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)} disabled={isDeleting(sale.id)}>
-
-                            {isDeleting(sale.id) ? 
-                            ( <Loader2 className="animate-spin"/>)  
-                            :
-                            (<Trash2 className="h-5 w-5"/>)  
-                            }
-
-                        </Button>
-
-                        <Button variant="warning" size="icon" onClick={() => handleSaleUpdate(sale)}> 
-                        <Pencil className="h-5 w-5" />
-
-                        </Button>
-                    </TableCell>
-                </TableRow>
-            ))}
-            </TableBody>
-        </Table>
+        <div className="pl-3 mt-3 mb-3 pr-3">
+        
+        <h1 className="text-3xl font-bold mb-4">Sales</h1>
 
         <Button variant="success" onClick={() => handleNewSale()}>New Sale</Button>
+        
+        <div className="rounded-md border mt-3">
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead key={"sale_id"}>Sale Id</TableHead>
+                        <TableHead key={"product_name"}>Product Name</TableHead>
+                        <TableHead key={"total_price"}>Total Price</TableHead>
+                        <TableHead key={"quantity"}>Quantity</TableHead>
+                        <TableHead key={"date"}>Date</TableHead>
+                        <TableHead key={"actions"}>Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                {sales.map((sale, index) => (
+                    <TableRow className={`${index % 2 === 0 ? 'bg-emerald-200/90' : 'bg-emerald-300/70'} hover:bg-emerald-400`} key={sale.id}>
+                        <TableCell className='flex pl-4 text-base' key={"sale_id"}>{sale.id}</TableCell>
+                        <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
+                        <TableCell key={"total_price_cell"}>{formatPrice(sale.total_price)}</TableCell>
+                        <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
+                        <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
+                        <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
+                            <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)} disabled={isDeleting(sale.id)}>
+                                {isDeleting(sale.id) ?
+                                ( <Loader2 className="animate-spin"/>)
+                                :
+                                (<Trash2 className="h-5 w-5"/>)
+                                }
+                            </Button>
+                            <Button variant="warning" size="icon" onClick={() => handleSaleUpdate(sale)}>
+                            <Pencil className="h-5 w-5" />
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                ))}
+                </TableBody>
+            </Table>
+        </div>
+
+        
 
         <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
 
@@ -101,10 +102,8 @@ const Sales = () => {
         </Dialog>
 
 
-        
-
       
-        </>
+        </div>
   );
   };
   

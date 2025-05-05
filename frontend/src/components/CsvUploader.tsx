@@ -87,7 +87,7 @@ export function CsvUploader() {
       }
 
       // Mostrar preview
-      setPreviewData(results.slice(0, 5))
+      setPreviewData(results)
       setBulkErrors([])
 
       
@@ -109,10 +109,10 @@ export function CsvUploader() {
   })
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       <div 
         {...getRootProps()}
-        className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
+        className={`w-100 h-40 m-auto mb-5 border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
           ${isDragActive ? 'border-primary bg-muted' : 'border-muted-foreground'}`}
       >
         <input {...getInputProps()} />
@@ -141,38 +141,46 @@ export function CsvUploader() {
 
       {previewData?.length > 0 && (
         <>
-        <Table>
-        <TableHeader>
-            <TableRow>
-              <TableHead key={"csv_line_head"}>Line</TableHead>
-              <TableHead key={"product_name_head"}>Name</TableHead>
-              <TableHead key={"description_head"}>Description</TableHead>
-              <TableHead key={"price_head"}>Price</TableHead>
-              <TableHead key={"category_head"}>Category_id</TableHead>
-              <TableHead key={"brand_head"}>Brand</TableHead>
-            </TableRow>
-        </TableHeader>
-
-        <TableBody>
-          {previewData?.map((produto, index) => (
-            <TableRow key={index + 2}>
-              <TableCell>{index + 2}</TableCell>
-              <TableCell>{produto.name}</TableCell>
-              <TableCell>{produto.description}</TableCell>
-              <TableCell>{produto.price}</TableCell>
-              <TableCell>{produto.category_id}</TableCell>
-              <TableCell>{produto.brand}</TableCell>
-            </TableRow>
-          ))}
-
-        </TableBody>
-        </Table>
-
-          <Button onClick={() => onSubmit()}>Enviar</Button>
-          <Button variant="destructive" onClick={() => {
+        <div className='flex gap-3'>
+        <Button variant='success' onClick={() => onSubmit()}>Enviar</Button>
+        
+        <Button variant="destructive" onClick={() => {
             setCsvFile(null)
             setPreviewData(null)
             }}>Limpar</Button>
+
+        </div>
+
+
+        <div className="rounded-md border">
+          <Table>
+          <TableHeader>
+              <TableRow>
+                <TableHead key={"csv_line_head"}>Line</TableHead>
+                <TableHead key={"product_name_head"}>Name</TableHead>
+                <TableHead key={"description_head"}>Description</TableHead>
+                <TableHead key={"price_head"}>Price</TableHead>
+                <TableHead key={"category_head"}>Category_id</TableHead>
+                <TableHead key={"brand_head"}>Brand</TableHead>
+              </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {previewData?.map((produto, index) => (
+              <TableRow className={`${index % 2 === 0 ? 'bg-amber-500/40' : 'bg-amber-600/50'} hover:bg-amber-500`} key={index + 2}>
+                <TableCell className='pl-3 text-base'>{index + 2}</TableCell>
+                <TableCell>{produto.name}</TableCell>
+                <TableCell>{produto.description}</TableCell>
+                <TableCell>{produto.price}</TableCell>
+                <TableCell>{produto.category_id}</TableCell>
+                <TableCell>{produto.brand}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          </Table>
+        </div>
+
+          
    
         </>
 

@@ -204,8 +204,8 @@ const SalesForm = ({saleUpdating, onSuccess}) => {
           )}
         />
 
-            <Button type="submit" disabled={isCreating || isUpdating} className="w-20">
-                { isCreating || isUpdating ? <Loader2 className="animate-spin"/> : <>Submit</>}
+            <Button type="submit" variant="success" disabled={isCreating || isUpdating} className="w-40">
+                { isCreating || isUpdating ? <Loader2 className="animate-spin"/> : <>{saleUpdating ? `Update Sale` : 'Register Sale'}</>}
             </Button>
           </form>
         </Form>

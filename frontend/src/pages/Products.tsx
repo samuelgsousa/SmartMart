@@ -149,8 +149,6 @@ const TabProducts = () => {
 
 const TabCategories = () => {
 
-    
-
     const [categoryUpdating, setCategoryUpdating] = useState(null)
     const [editedName, setEditedName] = useState('')
 
@@ -260,7 +258,7 @@ const TabCategories = () => {
 
         <Button variant='success' className='mb-3' onClick={() => setCategoryCreating(true)}>New Category</Button>
 
-        <div className="rounded-md border"> 
+        <div className="rounded-md border "> 
             <Table>
                 <TableHeader>
                     <TableRow className="[&_th]:bg-muted/50 [&_th]:hover:bg-muted">
@@ -271,12 +269,12 @@ const TabCategories = () => {
                 </TableHeader>
                 <TableBody>
                     {categories.map((category, index) => (
-                        <TableRow className={`${index % 2 === 0 ? 'bg-indigo-100' : 'bg-indigo-200'} hover:bg-indigo-300`} key={`category_row_${category.id}`}>
-                            <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell>
-                            <TableCell key={`category_name_${category.id}`}>
-                                {categoryUpdating?.id == category.id ? (<Input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)}/>) : category.name}
+                        <TableRow className={`${index % 2 === 0 ? 'bg-teal-300/50' : 'bg-teal-600/70'} hover:bg-teal-400`} key={`category_row_${category.id}`}>
+                            <TableCell className='text-base pl-3' key={`category_id_${category.id}`}>{category.id}</TableCell>
+                            <TableCell className='w-150' key={`category_name_${category.id}`}>
+                                {categoryUpdating?.id == category.id ? (<Input className='bg-white w-50' type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)}/>) : category.name}
                             </TableCell>
-                            <TableCell key={`category_action_${category.id}`}>
+                            <TableCell className="flex gap-2" key={`category_action_${category.id}`}>
                                 {categoryUpdating?.id == category.id ? (
                                    <>
                                     <Button variant="destructive" size="icon" onClick={() => setCategoryUpdating(null)}>
@@ -307,13 +305,14 @@ const TabCategories = () => {
                             </TableCell>
                         </TableRow>
                     ))}
+
                 {categoryCreating && (
-                    <TableRow key={`new_category_row`}>
+                    <TableRow className='bg-blue-300 hover:bg-blue-300' key={`new_category_row`}>
                         <TableCell key={`new_category_id`}>New</TableCell>
-                        <TableCell key={`new_category_name`}>
-                            <Input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}/>
+                        <TableCell className='w-150' key={`new_category_name`}>
+                            <Input className='bg-white w-50' type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}/>
                         </TableCell>
-                        <TableCell key={`new_category_actions`}>
+                        <TableCell className="flex gap-2" key={`new_category_actions`}>
                             <Button variant="destructive" size="icon" onClick={() => setCategoryCreating(false)}>
                                 <X className="h-6 w-6"/>
                             </Button>
