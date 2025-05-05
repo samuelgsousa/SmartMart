@@ -1,10 +1,10 @@
-# Painel Smart Mart
+📊 # Painel Smart Mart
 
 Aplicação web desenvolvida para oferecer uma base sólida de visualização e gestão de dados de vendas. Permite o cadastro manual ou em lote de produtos, bem como a análise de desempenho por meio de gráficos interativos.
 
 <br>
 
-## Funcionalidades
+## ⚙️ Funcionalidades
 
 - **Dashboard de vendas**: gráficos com visualização da quantidade de vendas mensais, lucro mensal e vendas por categoria.
 
@@ -27,7 +27,7 @@ Aplicação web desenvolvida para oferecer uma base sólida de visualização e 
 cd SmartMart/backend
 ```
 
-3. crie um ambiente virtual e instale as dependências:
+3. crie um ambiente virtual e ative-o::
 
 Para Windows:
 
@@ -88,7 +88,7 @@ Esse comando:
 
 - Cria as tabelas automaticamente
 
-- Insere dados iniciais de categorias, produtos e vendas
+- Inserir dados iniciais de categorias, produtos e vendas
 
 
 ### ⚙️ Opção 2. Manual:
@@ -111,7 +111,7 @@ python init_db.py
 
 
 
-## Iniciando o servidor
+## ▶️ Iniciando o Servidor Backend
 
 Depois de concluir as etapas acima, execute:
 
@@ -119,9 +119,9 @@ Depois de concluir as etapas acima, execute:
 uvicorn main:app --reload
 ```
 
-## Iniciando o Frontend
+## 🖥️ Iniciando o Frontend
 
-1. Inicie um novo terminal e acesse a pasta do frontend:
+1. Em um novo terminal, vá para a pasta do frontend:
 
 ```bash
 cd frontend
@@ -133,11 +133,13 @@ cd frontend
 npm install
 ```
 
-3. Inicie a aplicação:
+3. Inicie o frontend:
 
 ```bash
 npm run dev
 ```
+
+4. Acesse a aplicação em:
 
 ```
 http://localhost:5173
@@ -145,36 +147,36 @@ http://localhost:5173
 
 > Certifique-se de que o backend esteja rodando antes de iniciar o frontend, pois ele consome os dados da API.
 
-## Tecnologias Utilizadas
+## 🧰 Tecnologias Utilizadas
 
 A aplicação foi construída utilizando as seguintes tecnologias:
 
 ### 🧠 Backend
 
-- Python – Linguagem principal para regras de negócio
+- **Python** – Lógica de negócio
 
-- FastAPI – Framework web moderno e performático para criação de APIs REST
+- **FastAPI** – API REST moderna e rápida
 
-- SQLAlchemy – ORM para comunicação com banco de dados relacional
+- **SQLAlchemy** – ORM para MySQL
 
-- MySQL – Banco de dados relacional utilizado para armazenar os dados
+- **MySQL** – Banco relacional
 
-- Uvicorn – Servidor ASGI leve e rápido para executar a aplicação FastAPI
+- **Uvicorn** – Servidor ASGI para FastAPI
 
-- python-dotenv – Para gerenciamento de variáveis de ambiente
+- **python-dotenv** – Carregamento de variáveis de ambiente
 
 ### 📦 Frontend
 
-- React – Biblioteca JavaScript para construção da interface do usuário
+- **React** – Biblioteca para interfaces
 
-- Vite – Ferramenta para desenvolvimento e build do frontend
+- **Vite** – Build e dev server rápidos
 
-- TypeScript – Superset do JavaScript que adiciona tipagem estática
+- **TypeScript** – Tipagem para JavaScript
 
-- Tailwind CSS – Framework de estilos utilitário para estilização rápida e responsiva
+- **Tailwind CSS** – Estilização utilitária
 
-- React Query – Gerenciamento eficiente de requisições e cache de dados
+- **React Query** – Gerenciamento de dados e cache
 
-- Shadcn/ui – Componentes de interface modernos e acessíveis baseados em Tailwind
+- **Shadcn/ui** – Componentes acessíveis baseados em Tailwind
 
-- Lucide Icons – Conjunto de ícones de código aberto e personalizáveis
+- **Lucide Icons** – Ícones open-source personalizáveis
