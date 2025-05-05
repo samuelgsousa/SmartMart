@@ -30,14 +30,16 @@ function App() {
   <QueryClientProvider client={queryClient}>
       <main className="w-full min-h-screen">
       <h1 className="text-3xl font-bold underline">Smart Mart</h1>
-        <SidebarTrigger >
-        <ArrowLeft />
-        </SidebarTrigger>
+      
+        <SidebarTrigger/>
+
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
         
-          <SidebarGroupLabel>  Application <SidebarTrigger /></SidebarGroupLabel>
+          <SidebarGroupLabel>  Application <SidebarTrigger> <ArrowLeft /> </SidebarTrigger>
+        
+        </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
             
