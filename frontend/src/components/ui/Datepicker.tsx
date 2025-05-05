@@ -55,12 +55,12 @@ const DatePicker = ({ value, onChange }: DatePickerProps) => {
         readOnly
         value={internalDate ? format(internalDate, "dd/MM/yyyy") : ""}
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
         placeholder="Selecione uma data"
-      />
+      ></input>
 
       {isOpen && (
-        <div className="absolute mt-2 bg-white border rounded-lg shadow-lg p-4 z-50">
+        <div className="absolute bottom-full mb-2 bg-white border rounded-lg shadow-lg p-4 z-50">
           {/* Header do calendário */}
           <div className="flex justify-between items-center mb-4">
             <button
