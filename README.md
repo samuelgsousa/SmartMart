@@ -19,7 +19,9 @@ Aplicação web desenvolvida para oferecer uma base sólida de visualização e 
 
 1. Clone o repositório:
 
-`git clone https://github.com/samuelgsousa/SmartMart`
+```bash
+git clone https://github.com/samuelgsousa/SmartMart
+```
 
 2. Acesse a pasta **backend**, 
 
@@ -68,7 +70,7 @@ DB_PASSWORD=
 
 ## 🗃️ Inicialização do Banco de Dados
 
-No terminal, navegue até a pasta do backend:
+No terminal, navegue até a pasta do backend (se não estiver):
 
 ```bash
 cd backend
