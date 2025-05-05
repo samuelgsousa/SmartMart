@@ -104,5 +104,11 @@ A aplicação foi construída utilizando as seguintes tecnologias:
 
 - Tailwind CSS – Framework de estilos utilitário para estilização rápida e responsiva
 
-Chart.js – Biblioteca para geração de gráficos interativos
+- React Query – Gerenciamento eficiente de requisições e cache de dados
+
+- Shadcn/ui – Componentes de interface modernos e acessíveis baseados em Tailwind
+
+- Lucide Icons – Conjunto de ícones de código aberto e personalizáveis
+
+
 
