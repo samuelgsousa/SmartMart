@@ -128,7 +128,7 @@ uvicorn main:app --reload
 1. Em um novo terminal, vá para a pasta do frontend:
 
 ```bash
-cd frontend
+cd SmartMart/frontend
 ```
 
 2. Instale as dependências (é necessário ter o Node.js instalado):
