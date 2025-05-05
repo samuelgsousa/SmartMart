@@ -69,7 +69,7 @@ const Sales = () => {
                         <TableCell key={"product_name_cell"}>{sale.product_name}</TableCell>
                         <TableCell key={"total_price_cell"}>{formatPrice(sale.total_price)}</TableCell>
                         <TableCell key={"quantity_cell"}>{sale.quantity}</TableCell>
-                        <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString()}</TableCell>
+                        <TableCell key={"date"}>{new Date(sale.date).toLocaleDateString('pt-BR')}</TableCell>
                         <TableCell className="flex gap-2" key={`action_buttons_${sale.id}`}>
                             <Button  variant="destructive" size="icon" onClick={() => deleteSale(sale.id)} disabled={isDeleting(sale.id)}>
                                 {isDeleting(sale.id) ?
