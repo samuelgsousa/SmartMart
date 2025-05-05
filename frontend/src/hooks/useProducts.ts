@@ -52,7 +52,7 @@ export const useProducts = () => {
       const bulkCreate = useMutation({
         mutationFn: async (formData: FormData) => {
           const response = await ProductsService.bulkCreate(formData)
-          console.log("Resposta do provedor: ", response)
+          
 
           if(response.lineErros.length > 0){
             throw new CsvLineError("Erro em algumas linhas", {
@@ -75,7 +75,7 @@ export const useProducts = () => {
         products: productsQuery.data || [],
         isLoading: productsQuery.isLoading,
         isFetching: productsQuery.isFetching,
-        bulkCreate,
+        bulkCreate: bulkCreate.mutateAsync,
         isBulking: bulkCreate.isPending, // Novo estado de pending
         
         // Mutations
