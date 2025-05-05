@@ -3,7 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarTrigger } from "@/components/ui/sidebar"
 import { useLocation, Link } from "react-router-dom";
-import { ArrowLeft, BadgeDollarSign, House, Package } from "lucide-react";
+import { ArrowLeft, BadgeDollarSign, House, Package, PanelRightClose } from "lucide-react";
 import { useSidebar } from '@/components/ui/sidebar'; 
 
 const queryClient = new QueryClient({
@@ -20,26 +20,37 @@ function App() {
   const location = useLocation();
   const { open, setOpen  } = useSidebar();
 
-  useEffect(() => {
-    if (open) {
-      setOpen(false);
-    }
-  }, [location.pathname]);
+   useEffect(() => {
+     if (open) {
+       setOpen(false);
+     }
+   }, [location.pathname]);
 
   return(
   <QueryClientProvider client={queryClient}>
       <main className="w-full min-h-screen">
-      <h1 className="text-3xl font-bold underline">Smart Mart</h1>
+
+        <div className="flex items-center ml-2 h-12 gap-3">
+
+        <SidebarTrigger>
+          <PanelRightClose className="size-7"/>
+        </SidebarTrigger>
+
+        <h1 className="text-3xl font-bold pb-1">Smart Mart</h1>
+        </div>
       
-        <SidebarTrigger/>
+      
+        
 
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
         
-          <SidebarGroupLabel>  Application <SidebarTrigger> <ArrowLeft /> </SidebarTrigger>
-        
+        <SidebarGroupLabel className="flex-auto justify-between text-lg mb-2 mt-2"> 
+            SmartMart 
+            <SidebarTrigger ><ArrowLeft className="size-6" /> </SidebarTrigger>   
         </SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
             
