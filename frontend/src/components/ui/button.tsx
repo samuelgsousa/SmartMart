@@ -24,7 +24,7 @@ const buttonVariants = cva(
         warning:
           "focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 rounded-lg dark:focus:ring-yellow-900",
         success:
-          "focus:outline-none text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:ring-green-300 rounded-lg dark:focus:ring-green-900"
+          "focus:outline-none text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:ring-green-300 rounded-lg dark:focus:ring-green-900"
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

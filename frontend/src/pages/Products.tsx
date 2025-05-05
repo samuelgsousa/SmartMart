@@ -63,68 +63,74 @@ const TabProducts = () => {
 
         return (
             <>
+            
 
-            <div>
+            <div className='w-100 mb-2'>
 
             <label htmlFor="categories_filter" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Filter by category</label>
 
-            <select onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} id="categories_filter" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                <option selected>All categories</option>
-                {categories?.map(category => (
-                     <option key={category.id} value={category.id}>{category.name}</option>
-                    ))}
+            <div className='flex gap-4 items-center'>
+                <select onChange={(e) => setCategoryFilter(e.target.value)} value={categoryFilter} id="categories_filter" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option selected>All categories</option>
+                    {categories?.map(category => (
+                         <option key={category.id} value={category.id}>{category.name}</option>
+                        ))}
+                </select>
 
-            </select>
+                <Button variant="success" onClick={() => handleNewProduct()}>New Product</Button>
+            </div>
+
+            
 
 
             </div>
 
 
 
-            <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead key={"product_id_head"}>Product Id</TableHead>
-                    <TableHead key={"product_name_head"}>Product Name</TableHead>
-                    <TableHead key={"description_head"}>Description</TableHead>
-                    <TableHead key={"price_head"}>Price</TableHead>
-                    <TableHead key={"category_head"}>Category</TableHead>
-                    <TableHead key={"brand_head"}>Brand</TableHead>
-                </TableRow>
-            </TableHeader>
-
-            <TableBody>
-                {filteredProducts.map(product => (
-                    <TableRow key={`product_row_${product.id}`}>
-                        <TableCell key={`product_id_${product.id}`}>{product.id}</TableCell>
-                        <TableCell key={`product_name_${product.id}`}>{product.name}</TableCell>
-                        <TableCell key={`product_description_${product.id}`}>{product.description}</TableCell>
-                        <TableCell key={`product_price_${product.id}`}>{formatPrice(product.price)}</TableCell>
-                        <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
-                        <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
-                        <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
-                            <Button variant="destructive" size="icon" onClick={() => deleteProduct(product.id)} disabled={isDeleting(product.id)}>
-                            {isDeleting(product.id) ? 
-                            ( <Loader2 className="animate-spin"/>)  
-                            :
-                            (<Trash2 className="h-5 w-5"/>)  
-                            }
-                            
-                           
-                            </Button>
-    
-                            <Button variant="warning" size="icon" onClick={() => handleProductUpdate(product)}> 
-                                <Pencil className="h-5 w-5" />
-                            </Button>
-
-                        </TableCell>
+        <div className="rounded-md border">
+            <Table >
+                <TableHeader>
+                    <TableRow className="[&_th]:bg-muted/50 [&_th]:hover:bg-muted">
+                        <TableHead key={"product_id_head"}>Product Id</TableHead>
+                        <TableHead key={"product_name_head"}>Product Name</TableHead>
+                        <TableHead key={"description_head"}>Description</TableHead>
+                        <TableHead key={"price_head"}>Price</TableHead>
+                        <TableHead key={"category_head"}>Category</TableHead>
+                        <TableHead key={"brand_head"}>Brand</TableHead>
+                        <TableHead key={"actions_head"}>Actions</TableHead>
                     </TableRow>
+                </TableHeader>
+            {/* hover:bg-indigo-300 */}
+                <TableBody>
+                    {filteredProducts.map((product, index) => (
+                        <TableRow className={`${index % 2 === 0 ? 'bg-indigo-100' : 'bg-indigo-200'} hover:bg-indigo-300`} key={`product_row_${product.id}`}>
+                            <TableCell className='flex justify-center text-base' key={`product_id_${product.id}`}>{product.id}</TableCell>
+                            <TableCell key={`product_name_${product.id}`}>{product.name}</TableCell>
+                            <TableCell key={`product_description_${product.id}`}>{product.description}</TableCell>
+                            <TableCell key={`product_price_${product.id}`}>{formatPrice(product.price)}</TableCell>
+                            <TableCell key={`product_${product.id}_category`}>{product.category_name}</TableCell>
+                            <TableCell key={`product_brand_${product.id}`}>{product.brand}</TableCell>
+                            <TableCell className="flex gap-2" key={`action_buttons_${product.id}`}>
+                                <Button variant="destructive" size="icon" onClick={() => deleteProduct(product.id)} disabled={isDeleting(product.id)}>
+                                {isDeleting(product.id) ?
+                                ( <Loader2 className="animate-spin"/>)
+                                :
+                                (<Trash2 className="h-5 w-5"/>)
+                                }
+            
+            
+                                </Button>
+                                <Button variant="warning" size="icon" onClick={() => handleProductUpdate(product)}>
+                                    <Pencil className="h-5 w-5" />
+                                </Button>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </div>
 
-                ))}
-            </TableBody>
-        </Table>
-
-        <Button variant="success" onClick={() => handleNewProduct()}>New Product</Button>
+        
 
         <Dialog open={DialogIsOpen} onOpenChange={setDialogIsOpen}>
 
@@ -251,114 +257,93 @@ const TabCategories = () => {
 
             </DialogContent>
         </Dialog>
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHead key={"category_id_head"}>Id</TableHead>
-                    <TableHead key={"category_name_head"}>Category Name</TableHead>
-                    <TableHead key={"category_action_head"}>Action</TableHead>
-                </TableRow>
-            </TableHeader>
 
-            <TableBody>
-                {categories.map(category => (
-                    <TableRow key={`category_row_${category.id}`}>
+        <Button variant='success' className='mb-3' onClick={() => setCategoryCreating(true)}>New Category</Button>
 
-                        <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell> 
-
-                        <TableCell key={`category_name_${category.id}`}>
-                            {categoryUpdating?.id == category.id ? (<Input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)}/>) : category.name} 
-                        </TableCell>
-
-                        <TableCell key={`category_action_${category.id}`}>
-
-                            {categoryUpdating?.id == category.id ? (
-                               <>
-                                <Button variant="destructive" size="icon" onClick={() => setCategoryUpdating(null)}>
-                                    <X className="h-6 w-6"/>
-                                </Button>
-
-                                <Button variant="success" size="icon" onClick={() => submitEditingCategory()}>
-                                    <Check />
-                                </Button>
-
-                               </>
-                            ) : (
-                                <>
-                                
-                            <Button variant="destructive" size="icon" onClick={() => submitDeleteCategory(category.id)}>
-
-                                <Trash2 className="h-5 w-5"/>
-
-                                {/* {isDeleting(product.id) ? 
-                                ( <Loader2 className="animate-spin"/>)  
-                                :
-                                (<Trash2 className="h-5 w-5"/>)  
-                                } */}
-
-
-                            </Button>
-
-                            <Button variant="warning" size="icon" onClick={() => handleCategoryUpdate(category)}> 
-                                <Pencil className="h-5 w-5" />
-                            </Button>
-                                </>
-                            )
-                        
-                        }
-
-
-                        </TableCell>
-
+        <div className="rounded-md border"> 
+            <Table>
+                <TableHeader>
+                    <TableRow className="[&_th]:bg-muted/50 [&_th]:hover:bg-muted">
+                        <TableHead key={"category_id_head"}>Id</TableHead>
+                        <TableHead key={"category_name_head"}>Category Name</TableHead>
+                        <TableHead key={"category_action_head"}>Action</TableHead>
                     </TableRow>
-                ))}
-
-            {categoryCreating && (
-                <TableRow key={`new_category_row`}>
-                    <TableCell key={`new_category_id`}>New</TableCell> 
-    
-                    <TableCell key={`new_category_name`}>
-                        <Input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}/>
-                    </TableCell> 
-    
-                    <TableCell key={`new_category_actions`}>
-    
-                        <Button variant="destructive" size="icon" onClick={() => setCategoryCreating(false)}>
-                            <X className="h-6 w-6"/>
-                        </Button>
-
-                        <Button variant="success" size="icon" onClick={() => submitNewCategory()}>
-                            <Check />
-                        </Button>
-    
-                    </TableCell>  
-                </TableRow>
-            )}
-
-
-
-            </TableBody>
-
-
-        </Table>
-        <Button onClick={() => setCategoryCreating(true)}>New Category</Button>
+                </TableHeader>
+                <TableBody>
+                    {categories.map((category, index) => (
+                        <TableRow className={`${index % 2 === 0 ? 'bg-indigo-100' : 'bg-indigo-200'} hover:bg-indigo-300`} key={`category_row_${category.id}`}>
+                            <TableCell key={`category_id_${category.id}`}>{category.id}</TableCell>
+                            <TableCell key={`category_name_${category.id}`}>
+                                {categoryUpdating?.id == category.id ? (<Input type="text" value={editedName} onChange={(e) => setEditedName(e.target.value)}/>) : category.name}
+                            </TableCell>
+                            <TableCell key={`category_action_${category.id}`}>
+                                {categoryUpdating?.id == category.id ? (
+                                   <>
+                                    <Button variant="destructive" size="icon" onClick={() => setCategoryUpdating(null)}>
+                                        <X className="h-6 w-6"/>
+                                    </Button>
+                                    <Button variant="success" size="icon" onClick={() => submitEditingCategory()}>
+                                        <Check />
+                                    </Button>
+                                   </>
+                                ) : (
+                                    <>
+            
+                                <Button variant="destructive" size="icon" onClick={() => submitDeleteCategory(category.id)}>
+                                    <Trash2 className="h-5 w-5"/>
+                                    {/* {isDeleting(product.id) ?
+                                    ( <Loader2 className="animate-spin"/>)
+                                    :
+                                    (<Trash2 className="h-5 w-5"/>)
+                                    } */}
+                                </Button>
+                                <Button variant="warning" size="icon" onClick={() => handleCategoryUpdate(category)}>
+                                    <Pencil className="h-5 w-5" />
+                                </Button>
+                                    </>
+                                )
+            
+                            }
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                {categoryCreating && (
+                    <TableRow key={`new_category_row`}>
+                        <TableCell key={`new_category_id`}>New</TableCell>
+                        <TableCell key={`new_category_name`}>
+                            <Input type="text" value={newCategoryName} onChange={(e) => setNewCategoryName(e.target.value)}/>
+                        </TableCell>
+                        <TableCell key={`new_category_actions`}>
+                            <Button variant="destructive" size="icon" onClick={() => setCategoryCreating(false)}>
+                                <X className="h-6 w-6"/>
+                            </Button>
+                            <Button variant="success" size="icon" onClick={() => submitNewCategory()}>
+                                <Check />
+                            </Button>
+                        </TableCell>
+                    </TableRow>
+                )}
+                </TableBody>
+            </Table>
+        </div>
+        
+        
         </>
     )
 }
 
 
     return (
-        <>
+        <div className="pl-3 mt-3 mb-3 pr-3">
 
-        
         <Tabs defaultValue="products_tab" >
-        <TabsList>
-            <TabsTrigger value="products_tab">Products</TabsTrigger>
-            <TabsTrigger value="categories">Categories</TabsTrigger>
-            <TabsTrigger value="csv_uploader">CSV Uploader</TabsTrigger>
+        <TabsList className='mb-3'>
+            <TabsTrigger className="data-[state=inactive]:cursor-pointer" value="products_tab">Products</TabsTrigger>
+            <TabsTrigger className="data-[state=inactive]:cursor-pointer" value="categories">Categories</TabsTrigger>
+            <TabsTrigger className="data-[state=inactive]:cursor-pointer" value="csv_uploader">CSV Uploader</TabsTrigger>
         </TabsList>
+
         <TabsContent value="products_tab"> <TabProducts/> </TabsContent>
-        
         <TabsContent value="categories"><TabCategories/></TabsContent>
         <TabsContent value="csv_uploader"> <CsvUploader/> </TabsContent>
         </Tabs>
@@ -368,7 +353,7 @@ const TabCategories = () => {
             
 
 
-        </>
+        </div>
     )
 }
 
