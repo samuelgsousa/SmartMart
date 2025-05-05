@@ -32,8 +32,10 @@ const Products = () => {
 
     const {products, deleteProduct, deletingStates} = useProducts()
     const {categories, updateCategory, createCategory, deleteCategory} = useCategories()
-
-
+    
+    const [warningDialog, setWarningDialog] = useState(false)
+    const [categoryDeletingId, setCategoryDeletingId] = useState(null)
+    const [errorProductCount, setErrorProductCount] = useState(null)
 
 const TabProducts = () => {
     
@@ -155,11 +157,13 @@ const TabCategories = () => {
     const [categoryCreating, setCategoryCreating] = useState(false)
     const [newCategoryName, setNewCategoryName] = useState('')
 
-    const [categoryDeletingId, setCategoryDeletingId] = useState(null)
-    const [errorProductCount, setErrorProductCount] = useState(null)
-    const [warningDialog, setWarningDialog] = useState(false)
+
+    
     const [deleteOption, setDeleteOption] = useState('reassign')
 
+    useEffect(() => {
+       console.log(warningDialog)
+      }, [warningDialog]);
 
     const handleCategoryUpdate = async (category) => {
         
@@ -209,6 +213,7 @@ const TabCategories = () => {
         } catch (error) {
 
             if (error instanceof DeleteCategoryError) {
+                
                 setWarningDialog(true)
                 setCategoryDeletingId(category_id)
                 console.log("Detalhes: ", error.status.detail.products_count)
@@ -228,7 +233,7 @@ const TabCategories = () => {
         <>
         <Dialog open={warningDialog} onOpenChange={setWarningDialog}>
             <DialogContent>
-                <DialogHeader><DialogTitle> Aviso! A categoria {categoryDeletingId} possui {errorProductCount} produto() vinculados a ela! Como deseja prosseguir?</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle> Aviso! A categoria {categoryDeletingId} possui {errorProductCount} produtos vinculados a ela! Como deseja prosseguir?</DialogTitle></DialogHeader>
 
                         
             <div className="flex items-center mb-4">
@@ -287,7 +292,7 @@ const TabCategories = () => {
                                 ) : (
                                     <>
             
-                                <Button variant="destructive" size="icon" onClick={() => submitDeleteCategory(category.id)}>
+                                <Button variant="destructive" size="icon" onClick={() => submitDeleteCategory(category.id, "void")}>
                                     <Trash2 className="h-5 w-5"/>
                                     {/* {isDeleting(product.id) ?
                                     ( <Loader2 className="animate-spin"/>)
