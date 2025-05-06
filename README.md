@@ -14,8 +14,16 @@ Aplicação web desenvolvida para oferecer uma base sólida de visualização e 
 
 - **Filtros por categoria**: permite filtrar produtos com base na categoria selecionada.
 
+<br>
 
-## Instalação:
+## 🚀 Acesso à aplicação em produção
+
+Você pode acessar a versão em produção da aplicação através do link abaixo:
+
+🔗 [SmartMart - Aplicação em produção](https://smart-mart-one.vercel.app/)
+
+
+## 🛠️ Instalação:
 
 1. Clone o repositório:
 
