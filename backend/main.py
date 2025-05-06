@@ -16,7 +16,6 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "http://localhost:8000",
     "https://smart-mart-one.vercel.app"
     # Depois adicionar outros domínios/deploys aqui:
     # Ex: "https://meu-app.vercel.app",
@@ -24,7 +23,7 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,        
+    allow_origins=["*"],        
     allow_credentials=True,        
     allow_methods=["*"],    
     allow_headers=["*"],
