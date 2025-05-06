@@ -17,7 +17,7 @@ app = FastAPI()
 origins = [
     "http://localhost:5173",
     "http://localhost:8000",
-    "https://smart-mart-one.vercel.app/"
+    "https://smart-mart-one.vercel.app"
     # Depois adicionar outros domínios/deploys aqui:
     # Ex: "https://meu-app.vercel.app",
 ]
